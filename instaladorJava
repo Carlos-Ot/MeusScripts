@@ -1,0 +1,54 @@
+#!/bin/bash
+# ----------------------------------------------------------------------------
+# Instala o JDK no Ubuntu
+#
+# Uso: instaladorJava <path/do/jdk.tar.gz>
+# Ex.: instaladorJava $HOME/Downloads/jdk-7u25-linux-x64.tar.gz
+#
+# Autor: Frank Junior <frankcbjunior@gmail.com>
+# Desde: 2013-07-22
+# Versão: 1
+# ----------------------------------------------------------------------------
+
+#path onde o java será instalado
+path_java="usr/lib/jvm"
+#pacote .tar.gz do donwload do JDK, recebida por parametro
+jdk_tar_gz=$1
+
+
+# verificando se o path já existe
+if [ ! -d $path_java ]; then
+	echo "criando diretório java em $path_java"
+	mkdir -p $path_java
+fi
+
+# pegando o nome do diretorio que o tar.gz vai extrair
+java=$(tar -tf $jdk_tar_gz | cut -d "/" -f1 | uniq)
+# movendo o tar.gz para o diretorio de instalação do java
+mv $jdk_tar_gz $path_java
+#entrando no path
+cd $path_java
+# extraindo todos os .tar.gz
+sudo tar -xzvf *.tar.gz
+#deletando todos os tar.gz
+sudo rm *.tar.gz
+
+#Informando ao Ubuntu aonde sua instalação do Java está localizada
+sudo update-alternatives --install "/usr/bin/javac" "javac" "$path_java/$java/bin/javac" 1
+sudo update-alternatives --install "/usr/bin/java" "java" "$path_java/$java/bin/java" 1
+
+#Informando ao Ubuntu que esse é a sua instalação default de Java
+sudo update-alternatives --set "javac" "$path_java/$java/bin/javac"
+sudo update-alternatives --set "java" "$path_java/$java/bin/java"
+
+#atualizando o path no /etc/profile
+sudo echo "JAVA_HOME=$path_java/java" >> /etc/profile
+sudo echo 'PATH=$PATH:$JAVA_HOME/bin' >> /etc/profile
+sudo echo 'export JAVA_HOME' >> /etc/profile
+sudo echo 'export PATH' >> /etc/profile
+
+#reload no /etc/profile
+. /etc/profile
+
+
+
