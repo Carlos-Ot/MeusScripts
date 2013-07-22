@@ -2,8 +2,10 @@
 
 echo "usuario: $(whoami)"
 echo "hostname: $(hostname)"
+#Model name  = /usr/sbin/system_profiler SPHardwareDataType | grep "Model Name" | cut -d ":" -f2 | cut -c2-
 echo "SO: $(uname -o)"
+#echo "SO: $(uname -s)" ---  Para o Mac
 echo "Distribuicao: $(lsb_release -sd)"
-echo "memoria: $(free -g)G"
+echo "memoria: total:$(free -g | grep "Mem" | cut -d ":" -f2 | sed s/\ //g | cut -c1)G"
 echo "processador: $(grep "model name" /proc/cpuinfo | uniq | cut -d ":" -f2 | sed s/\ //) x$(grep "model name" /proc/cpuinfo | wc -l)"
 echo "arquitetura: $(arch)"
