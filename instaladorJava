@@ -11,7 +11,7 @@
 # ----------------------------------------------------------------------------
 
 #path onde o java será instalado
-path_java="usr/lib/jvm"
+path_java="/usr/lib/jvm"
 #pacote .tar.gz do donwload do JDK, recebida por parametro
 jdk_tar_gz=$1
 

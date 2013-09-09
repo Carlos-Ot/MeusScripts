@@ -1,0 +1,44 @@
+#!/bin/bash
+# Cabeçalho
+# ----------------------------------------------------------------------------
+# Faz parser de arquivos .xml para .json. 
+# Voltado para os arquivos .xml de Dados Abertos.
+# Salva o resultado do .json em um arquivo chamado 'resultado.json'
+#
+# Uso: parser_xml_to_json <arquivo.xml>
+# Ex.: ./parser_xml_to_json dados.xml
+#
+# Autor: Frank <frankcbjunior (a) gmail com>
+# Desde: 10-5-2013
+# Versão: 1
+# ----------------------------------------------------------------------------
+
+if [ "$1" = "" ];then
+		echo 'uso: parser_xml_to_json <arquivo.xml>'
+		exit 1
+fi
+
+
+#
+#Comentarios referentes as linhas do parser
+#
+
+# procura por toda tag chamada registro, no singular
+# procura todo registro no singular, e substitui por nada
+# remove o final da tag /> por nada
+# Coloque um { no começo de cada linha
+# coloca os campos entre aspas, e com um : depois
+# coloca uma virgula entre os campos
+
+JSON=$(grep 'registro[^s]' $1 |\
+sed s/\<registro// |\
+sed 's@/>@@' |\
+sed 's/^ *\(.*\)/\{\1\}/' |\
+sed 's/\(campo[0-6]\)=/"\1":/g' |\
+sed 's/ /,/g'
+)
+
+
+# Passa o resultado disso pra um arquivo novo
+echo "$JSON" > resultado.json
+
