@@ -1,0 +1,24 @@
+
+%! Target  : html
+%! Options : --toc --toc-level 3
+%! Encoding: UTF-8
+%!options(html): --mask-email --toc
+%!postproc(html): <HEAD> '<HEAD>\n<STYLE>body{margin:3em;} pre{background:#ffc;}</STYLE>'
+
++README+
+
++ O Arquivo xml quem vem do Google está aqui, e é chamado de
+```
+dados.xml
+```
+se quiser, como melhoria, dá pra pro script receber ele por parametro ma enfim...
++ pra rodar o script basta executar isso aqui 
+```
+./xml2json.bash
+```
++ ele vai gerar um arquivo chamado 
+```
+resultado.json
+```
+agora é só consumir esse arquivo no codigo Java
+=D
