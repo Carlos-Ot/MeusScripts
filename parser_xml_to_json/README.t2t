@@ -7,18 +7,13 @@
 
 +README+
 
-+ O Arquivo xml quem vem do Google está aqui, e é chamado de
-```
-dados.xml
-```
-se quiser, como melhoria, dá pra pro script receber ele por parametro ma enfim...
-+ pra rodar o script basta executar isso aqui 
-```
-./xml2json.bash
-```
-+ ele vai gerar um arquivo chamado 
-```
-resultado.json
-```
-agora é só consumir esse arquivo no codigo Java
-=D
+++Objetivo++
+
+Script que fazer um parser de um .xml para .json, mas baseado nos .xml dos dados abertos
+
+++Uso++
+Uso: ``parser_xml_to_json <arquivo.xml>``
+Ex.: ``./parser_xml_to_json dados.xml``
+
+depois que executar, ele vai gerar um arquivo chamado: ``resultado.json``
+
