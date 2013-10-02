@@ -1,0 +1,73 @@
+#!/bin/bash
+# Cabeçalho
+# ----------------------------------------------------------------------------
+# Padroniza todo o diretório de imagem, e todas as ".jpg"
+# deixando no padrão da "zzarrumanome" e "zzarrumafoto"
+#
+# Uso: padronizador_de_diretorio_de_imagem <diretorio_de_imagem>
+# Ex.: ./padronizador_de_diretorio_deimagem $HOME/minha-imagens/
+#
+# Autor: Frank <frankcbjunior (a) gmail com>
+# Desde: 2-10-2013
+# Versão: 1
+# ----------------------------------------------------------------------------
+
+# Variáveis
+# ----------------------------------------------------------------------------
+funcoeszz_dir=$(echo $ZZPATH | sed 's/\/funcoeszz$//')
+diretorio_de_imagem="$1"
+script_dir=$(pwd)
+# ----------------------------------------------------------------------------
+
+# funções
+# ----------------------------------------------------------------------------
+function retirar_ponto_1(){
+local tipo_de_arquivo
+case "$1" in
+	f);;
+	d);;
+	*)
+		echo "opcao invalida"
+		exit 1
+		;;
+esac
+# retirando os arquivos que tem ".1" no final dos arquivoss (acho que é bug do zzarrumanome)
+for arquivo_ponto_1 in $(find "$diretorio_de_imagem" -type "$1" -iname "*.1"); 
+do 
+	mv -v $arquivo_ponto_1 $(echo $arquivo_ponto_1 | sed 's/.1//g'); 
+done
+
+}
+# ----------------------------------------------------------------------------
+
+# Main
+# ----------------------------------------------------------------------------
+# padronizando todo mundo com o zzarrumanome
+cd $funcoeszz_dir
+./funcoeszz zzarrumanome -d -r "$diretorio_de_imagem"*
+cd "$script_dir"
+
+# retirando os ".1" de todos os arquivos.
+# OBS: esse loope está quebrado em 2, pq se ele fizer tudo de uma vez
+# ele vai dizer q o diretorio não existe mais (pq já tinha sido renomeado antes)
+retirar_ponto_1 "d"
+retirar_ponto_1 "f"
+
+# renomeando todos os arquivos
+cd $funcoeszz_dir
+for diretorio in "$diretorio_de_imagem"*;
+do
+	if [ -d "$diretorio" ];then
+		nome_do_diretorio=$(echo "$diretorio" | sed 's/.*\/\(.*$\)/\1/')
+		./funcoeszz zznomefoto -p ""$diretorio"/"$nome_do_diretorio"-" "$diretorio"/*
+	else
+		nome_do_diretorio=$(echo "$diretorio_de_imagem" | sed 's/.*\/\(.*\)\/$/\1/')
+		./funcoeszz zznomefoto -p ""$diretorio_de_imagem""$nome_do_diretorio"-" "$diretorio_de_imagem"*
+		exit 0
+	fi
+done
+cd "$script_dir"
+
+# procura por arquivos sem extensão e coloca um ".jpg" no final
+find "$diretorio_de_imagem" -type f ! -iname "*.*" -exec mv {} {}.jpg \;
+# ----------------------------------------------------------------------------
