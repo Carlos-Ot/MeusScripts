@@ -29,23 +29,27 @@ mv $jdk_tar_gz $path_java
 #entrando no path
 cd $path_java
 # extraindo todos os .tar.gz
-sudo tar -xzvf *.tar.gz
+tar -xzvf *.tar.gz
 #deletando todos os tar.gz
-sudo rm *.tar.gz
+rm *.tar.gz
 
 #Informando ao Ubuntu aonde sua instalação do Java está localizada
-sudo update-alternatives --install "/usr/bin/javac" "javac" "$path_java/$java/bin/javac" 1
-sudo update-alternatives --install "/usr/bin/java" "java" "$path_java/$java/bin/java" 1
+echo "informando onde está sua localização padrão do java"
+update-alternatives --install "/usr/bin/javac" "javac" "$path_java/$java/bin/javac" 1
+update-alternatives --install "/usr/bin/java" "java" "$path_java/$java/bin/java" 1
 
 #Informando ao Ubuntu que esse é a sua instalação default de Java
-sudo update-alternatives --set "javac" "$path_java/$java/bin/javac"
-sudo update-alternatives --set "java" "$path_java/$java/bin/java"
+echo "Informando que essa é sua instalação default do java"
+update-alternatives --set "javac" "$path_java/$java/bin/javac"
+update-alternatives --set "java" "$path_java/$java/bin/java"
 
 #atualizando o path no /etc/profile
-sudo echo "JAVA_HOME=$path_java/java" >> /etc/profile
-sudo echo 'PATH=$PATH:$JAVA_HOME/bin' >> /etc/profile
-sudo echo 'export JAVA_HOME' >> /etc/profile
-sudo echo 'export PATH' >> /etc/profile
+echo "" >> /etc/profile
+echo "#------- instalação do java -------" >> /etc/profile
+echo "JAVA_HOME=$path_java/java" >> /etc/profile
+echo 'PATH=$PATH:$JAVA_HOME/bin' >> /etc/profile
+echo 'export JAVA_HOME' >> /etc/profile
+echo 'export PATH' >> /etc/profile
 
 #reload no /etc/profile
 . /etc/profile

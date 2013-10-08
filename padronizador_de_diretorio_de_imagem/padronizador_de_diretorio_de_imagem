@@ -5,7 +5,7 @@
 # deixando no padrão da "zzarrumanome" e "zzarrumafoto"
 #
 # Uso: padronizador_de_diretorio_de_imagem <diretorio_de_imagem>
-# Ex.: ./padronizador_de_diretorio_deimagem $HOME/minha-imagens/
+# Ex.: ./padronizador_de_diretorio_de_imagem $HOME/minha-imagens/
 #
 # Autor: Frank <frankcbjunior (a) gmail com>
 # Desde: 2-10-2013
@@ -14,6 +14,13 @@
 
 # Variáveis
 # ----------------------------------------------------------------------------
+
+# validação para saber se as funcoeszz estão instaladas
+if [ -z "$ZZPATH" ];then
+		echo "seu '$ZZPATH' está vazio. Provavelmente você não instalou as funcoeszz"
+		exit 1
+fi
+
 funcoeszz_dir=$(echo $ZZPATH | sed 's/\/funcoeszz$//')
 diretorio_de_imagem="$1"
 script_dir=$(pwd)
@@ -69,5 +76,6 @@ done
 cd "$script_dir"
 
 # procura por arquivos sem extensão e coloca um ".jpg" no final
+# OBS: linha necessária por causa da função 'retirar_ponto_1'
 find "$diretorio_de_imagem" -type f ! -iname "*.*" -exec mv {} {}.jpg \;
 # ----------------------------------------------------------------------------
