@@ -2,8 +2,8 @@
 # ----------------------------------------------------------------------------
 # Instala o JDK no Ubuntu
 #
-# Uso: instaladorJava <path/do/jdk.tar.gz>
-# Ex.: instaladorJava $HOME/Downloads/jdk-7u25-linux-x64.tar.gz
+# Uso: sudo ./instaladorJava <path/do/jdk.tar.gz>
+# Ex.: sudo ./instaladorJava $HOME/Downloads/jdk-7u25-linux-x64.tar.gz
 #
 # Autor: Frank Junior <frankcbjunior@gmail.com>
 # Desde: 2013-07-22
