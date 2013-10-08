@@ -15,6 +15,15 @@ path_java="/usr/lib/jvm"
 #pacote .tar.gz do donwload do JDK, recebida por parametro
 jdk_tar_gz=$1
 
+# TODO: verificar se o usuario rodou o script como root
+
+# verificando se o arquivo passado por parametro existe
+if [ ! -e "$jdk_tar_gz" ];then
+		echo "arquivo não existe"
+		exit 1
+fi
+
+# TODO: verificar se o arquivo é válido (termina com .tar.gz)
 
 # verificando se o path já existe
 if [ ! -d $path_java ]; then
