@@ -1,11 +1,19 @@
-#/bin/bash
+#!/bin/bash
 
-echo -e "\e[33musuario:\e[m\t$cor_default"$(whoami)" - "$(uptime | cut -d " " -f4-5 | sed s/,//)""
-echo -e "\e[33mhostname:\e[m\t"$(hostname)""
+usuario='usuario'
+hostname='hostname'
+SO='SO'
+distribuicao='distribuicao'
+memoria='memoria'
+processador='processador'
+arquitetura='arquitetura'
+
+echo -e "\e[33m"$usuario":\e[m\t$cor_default"$(whoami)" - "$(uptime | cut -d " " -f4-5 | sed s/,//)""
+echo -e "\e[33m"$hostname":\e[m\t"$(hostname)""
 #echo -e "Model name: $(/usr/sbin/system_profiler SPHardwareDataType | grep "Model Name" | cut -d ":" -f2 | cut -c2-)"
-echo -e "\e[33mSO:\e[m\t\t"$(uname -o)""
+echo -e "\e[33m"$SO":\e[m\t\t"$(uname -o)""
 #echo -e "SO: $(uname -s)" ---  Para o Mac
-echo -e "\e[33mDistribuicao:\e[m\t"$(lsb_release -sd)""
-echo -e "\e[33mmemoria:\e[m\t$(free -g | grep "Mem" | cut -d ":" -f2 | sed s/\ //g | cut -c1)G"
-echo -e "\e[33mprocessador:\e[m\t"$(grep "model name" /proc/cpuinfo | uniq | cut -d ":" -f2 | sed s/\ //)" x"$(grep "model name" /proc/cpuinfo | wc -l)""
-echo -e "\e[33marquitetura:\e[m\t"$(arch)""
+echo -e "\e[33m"$distribuicao":\e[m\t"$(lsb_release -sd)""
+echo -e "\e[33m"$memoria":\e[m\t$(free -g | grep "Mem" | cut -d ":" -f2 | sed s/\ //g | cut -c1)G"
+echo -e "\e[33m"$processador":\e[m\t"$(grep "model name" /proc/cpuinfo | uniq | cut -d ":" -f2 | sed s/\ //)" x"$(grep "model name" /proc/cpuinfo | wc -l)""
+echo -e "\e[33m"$arquitetura":\e[m\t"$(arch)""
