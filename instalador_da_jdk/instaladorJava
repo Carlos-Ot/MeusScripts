@@ -15,7 +15,22 @@ path_java="/usr/lib/jvm"
 #pacote .tar.gz do donwload do JDK, recebida por parametro
 jdk_tar_gz=$1
 
-# TODO: verificar se o usuario rodou o script como root
+# verifica se o script foi rodado com sudo
+if [ ! $(id -u) -eq 0 ];then
+		echo "rode o script com sudo"
+		exit 1
+fi
+
+# Verifica a arquitetura do SO e verifica a arquitetura do pacote
+if [ $(arch) = 'x86_64' -a $(echo "$jdk_tar_gz" | grep "x64" > /dev/null; echo $?) -eq 1 ];then
+		echo "seus sistema eh 64 bits mas essa JDK passada por parametro eh 32."
+		echo "Instale a JDK correta"
+		exit 1
+elif [ ! $(arch) = 'x86_64' -a $(echo "$jdk_tar_gz" | grep "x64" > /dev/null; echo $?) -eq 0 ];then
+		echo "seus sistema eh 32 bits mas essa JDK passada por parametro eh 64."
+		echo "Instale a JDK correta"
+		exit 1
+fi
 
 # verificando se o arquivo passado por parametro existe
 if [ ! -e "$jdk_tar_gz" ];then
@@ -23,7 +38,11 @@ if [ ! -e "$jdk_tar_gz" ];then
 		exit 1
 fi
 
-# TODO: verificar se o arquivo é válido (termina com .tar.gz)
+# Verificando se o arquivo passado termina com .tar.gz
+if [ $(echo "$jdk_tar_gz | egrep '.tar.gz$' > /dev/null;echo $?") -eq 1 ];then
+		echo "esse arquivo passado por parametro, não termina com .tar.gz"
+		exit 1
+fi
 
 # verificando se o path já existe
 if [ ! -d $path_java ]; then
