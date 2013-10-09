@@ -3,7 +3,7 @@ Parser XML to JSON
 
 ## Objetivo
 
-Script que fazer um parser de um .xml para .json, mas baseado nos .xml dos dados abertos
+Script que fazer um parser de um .xml para .json, mas baseado nos .xml dos [dados abertos do Recife](http://dados.recife.pe.gov.br/)
 
 ## Uso
 
