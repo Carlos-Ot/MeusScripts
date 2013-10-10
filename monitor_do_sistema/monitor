@@ -1,5 +1,18 @@
 #!/bin/bash
+# ----------------------------------------------------------------------------
+# Monitor do Sistema
+#
+# Uso: ./monitor
+#
+# Autor: Frank Junior <frankcbjunior@gmail.com>
+# Desde: 2013-07-22
+# Versão: 1
+# ----------------------------------------------------------------------------
 
+# Variáveis
+# ----------------------------------------------------------------------------
+
+# labels
 usuario='usuario'
 hostname='hostname'
 SO='SO'
@@ -8,12 +21,68 @@ memoria='memoria'
 processador='processador'
 arquitetura='arquitetura'
 
-echo -e "\e[33m"$usuario":\e[m\t$cor_default"$(whoami)" - "$(uptime | cut -d " " -f4-5 | sed s/,//)""
-echo -e "\e[33m"$hostname":\e[m\t"$(hostname)""
+# cores
+cor_amarelo="\e[33m"
+fecha_cor="\e[m"
+
+# Funcoes
+# ----------------------------------------------------------------------------
+
+# funcao para verificar o SO corrente e chamar seus respectivos comandos
+function verifica_so(){
+local current_so="$(echo $OSTYPE)"
+case "$current_so" in
+		linux-gnu)
+			# comandos do Linux
+			usuario_comando="\t"$(whoami)" - "$(uptime | cut -d " " -f4-5 | sed s/,//)""
+			hostname_comando="\t"$(hostname)""
+			SO_comando="\t\t"$(uname -o)""
+			distribuicao_comando="\t"$(lsb_release -sd)""
+			memoria_comando="\t$(free -g | grep "Mem" | cut -d ":" -f2 | sed s/\ //g | cut -c1)G"
+			processador_comando="\t"$(grep "model name" /proc/cpuinfo | uniq | cut -d ":" -f2 | sed s/\ //)"\
+					x"$(grep "model name" /proc/cpuinfo | wc -l)""
+			arquitetura_comando="\t"$(arch)""
+			;;
+		darwin)
+			# comandos do Mac
+			usuario_comando="ainda nao implementado"
+			hostname_comando="ainda nao implementado"
+			SO_comando="ainda nao implementado"
+			distribuicao_comando="ainda nao implementado"
+			memoria_comando="ainda nao implementado"
+			processador_comando="ainda nao implementado"
+			arquitetura_comando="ainda nao implementado"
+			echo "estou no Mac"
+			;;
+		cygwin)
+			# comandos do Cygwin
+			usuario_comando="ainda nao implementado"
+			hostname_comando="ainda nao implementado"
+			SO_comando="ainda nao implementado"
+			distribuicao_comando="ainda nao implementado"
+			memoria_comando="ainda nao implementado"
+			processador_comando="ainda nao implementado"
+			arquitetura_comando="ainda nao implementado"
+			echo "estou no cygwin"
+			;;
+		*)
+			echo "Sistema Operacional incompatível com o script"
+			exit 1
+			;;
+esac
+}
+
+# Main
+# ----------------------------------------------------------------------------
+
+verifica_so
+
+echo -e ""$cor_amarelo""$usuario":"$fecha_cor""$usuario_comando""
+echo -e ""$cor_amarelo""$hostname":"$fecha_cor""$hostname_comando""
 #echo -e "Model name: $(/usr/sbin/system_profiler SPHardwareDataType | grep "Model Name" | cut -d ":" -f2 | cut -c2-)"
-echo -e "\e[33m"$SO":\e[m\t\t"$(uname -o)""
+echo -e ""$cor_amarelo""$SO":"$fecha_cor""$SO_comando""
 #echo -e "SO: $(uname -s)" ---  Para o Mac
-echo -e "\e[33m"$distribuicao":\e[m\t"$(lsb_release -sd)""
-echo -e "\e[33m"$memoria":\e[m\t$(free -g | grep "Mem" | cut -d ":" -f2 | sed s/\ //g | cut -c1)G"
-echo -e "\e[33m"$processador":\e[m\t"$(grep "model name" /proc/cpuinfo | uniq | cut -d ":" -f2 | sed s/\ //)" x"$(grep "model name" /proc/cpuinfo | wc -l)""
-echo -e "\e[33m"$arquitetura":\e[m\t"$(arch)""
+echo -e ""$cor_amarelo""$distribuicao":"$fecha_cor""$distribuicao_comando""
+echo -e ""$cor_amarelo""$memoria":"$fecha_cor""$memoria_comando""
+echo -e ""$cor_amarelo""$processador":"$fecha_cor""$processador_comando""
+echo -e ""$cor_amarelo""$arquitetura":"$fecha_cor""$arquitetura_comando""
