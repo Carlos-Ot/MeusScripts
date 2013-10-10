@@ -36,7 +36,7 @@ case "$current_so" in
 			# comandos do Linux
 			usuario_comando="\t"$(whoami)" - "$(uptime | cut -d " " -f4-5 | sed s/,//)""
 			hostname_comando="\t"$(hostname)""
-			SO_comando="\t\t"$(uname -o)""
+			SO_comando="\t\t"$(uname -s)""
 			distribuicao_comando="\t"$(lsb_release -sd)""
 			memoria_comando="\t$(free -g | grep "Mem" | cut -d ":" -f2 | sed s/\ //g | cut -c1)G"
 			processador_comando="\t"$(grep "model name" /proc/cpuinfo | uniq | cut -d ":" -f2 | sed s/\ //)"\
