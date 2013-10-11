@@ -28,6 +28,7 @@ script_dir=$(pwd)
 
 # funções
 # ----------------------------------------------------------------------------
+
 function retirar_ponto_1(){
 local tipo_de_arquivo
 case "$1" in
@@ -55,6 +56,7 @@ cd $funcoeszz_dir
 cd "$script_dir"
 
 # retirando os ".1" de todos os arquivos.
+# Isso é necessário no caso de arquivo duplicado, o Linux coloca um '.<formato>.1'
 # OBS: esse loope está quebrado em 2, pq se ele fizer tudo de uma vez
 # ele vai dizer q o diretorio não existe mais (pq já tinha sido renomeado antes)
 retirar_ponto_1 "d"
