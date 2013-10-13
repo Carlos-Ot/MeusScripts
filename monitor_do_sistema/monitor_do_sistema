@@ -12,17 +12,6 @@
 # Variáveis
 # ----------------------------------------------------------------------------
 
-# labels
-usuario='usuario'
-computador='computador'
-versao='versao'
-hostname='hostname'
-SO='SO'
-distribuicao='distribuicao'
-memoria='memoria'
-processador='processador'
-arquitetura='arquitetura'
-
 # cores
 cor_amarelo="\033[33m"
 fecha_cor="\033[m"
@@ -84,15 +73,15 @@ function get_info_mac(){
 
 verifica_so
 
-echo -e ""$cor_amarelo""$usuario":"$fecha_cor""$usuario_comando""
-echo -e ""$cor_amarelo""$hostname":"$fecha_cor""$hostname_comando""
+echo -e "${cor_amarelo}usuario:${fecha_cor}${usuario_comando}"
+echo -e "${cor_amarelo}hostname:${fecha_cor}${hostname_comando}"
 if [ $(uname -s) = 'Linux' ]; then
-	echo -e ""$cor_amarelo""$SO":"$fecha_cor""$SO_comando""
-	echo -e ""$cor_amarelo""$distribuicao":"$fecha_cor""$distribuicao_comando""
+	echo -e "${cor_amarelo}SO:${fecha_cor}${SO_comando}"
+	echo -e "${cor_amarelo}distribuicao:${fecha_cor}${distribuicao_comando}"
 elif [ $(uname -s) = 'Darwin' ]; then
-	echo -e ""$cor_amarelo""$computador":"$fecha_cor""$computador_comando""
-	echo -e ""$cor_amarelo""$versao":"$fecha_cor""$versao_comando""
+	echo -e "${cor_amarelo}computador:${fecha_cor}${computador_comando}"
+	echo -e "${cor_amarelo}versao:${fecha_cor}$versao_comando}"
 fi
-echo -e ""$cor_amarelo""$memoria":"$fecha_cor""$memoria_comando""
-echo -e ""$cor_amarelo""$processador":"$fecha_cor""$processador_comando""
-echo -e ""$cor_amarelo""$arquitetura":"$fecha_cor""$arquitetura_comando""
+echo -e "${cor_amarelo}memoria:${fecha_cor}${memoria_comando}"
+echo -e "${cor_amarelo}processador:${fecha_cor}"${processador_comando}""
+echo -e "${cor_amarelo}arquitetura:${fecha_cor}${arquitetura_comando}"
