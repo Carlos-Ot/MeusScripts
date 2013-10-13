@@ -14,6 +14,8 @@
 
 # labels
 usuario='usuario'
+computador='computador'
+versao='versao'
 hostname='hostname'
 SO='SO'
 distribuicao='distribuicao'
@@ -22,17 +24,17 @@ processador='processador'
 arquitetura='arquitetura'
 
 # cores
-cor_amarelo="\e[33m"
-fecha_cor="\e[m"
+cor_amarelo="\033[33m"
+fecha_cor="\033[m"
 
 # Funcoes
 # ----------------------------------------------------------------------------
 
 # funcao para verificar o SO corrente e chamar seus respectivos comandos
 function verifica_so(){
-local current_so="$(echo $OSTYPE)"
+local current_so="$(uname -s)"
 case "$current_so" in
-		linux-gnu)
+		Linux)
 			# comandos do Linux
 			usuario_comando="\t"$(whoami)" - "$(uptime | cut -d " " -f4-5 | sed s/,//)""
 			hostname_comando="\t"$(hostname)""
@@ -43,16 +45,16 @@ case "$current_so" in
 					x"$(grep "model name" /proc/cpuinfo | wc -l)""
 			arquitetura_comando="\t"$(arch)""
 			;;
-		darwin)
+		Darwin)
 			# comandos do Mac
-			usuario_comando="ainda nao implementado"
-			hostname_comando="ainda nao implementado"
-			SO_comando="ainda nao implementado"
-			distribuicao_comando="ainda nao implementado"
-			memoria_comando="ainda nao implementado"
-			processador_comando="ainda nao implementado"
-			arquitetura_comando="ainda nao implementado"
-			echo "estou no Mac"
+			usuario_comando="\t"$(whoami)" - "$(uptime | cut -d " " -f5-6 | sed s/,//)""
+			hostname_comando="\t"$(hostname)""
+			computador_comando="\t$(get_info_mac 'SPHardwareDataType' 'Model Name')"
+			versao_comando="\t\t$(get_info_mac 'SPSoftwareDataType' 'System Version')"
+			memoria_comando="\t$(get_info_mac 'SPHardwareDataType' 'Memory')"
+			processador_comando="\t$(get_info_mac 'SPHardwareDataType' 'Processor Name') \
+				$(get_info_mac 'SPHardwareDataType' 'Processor Speed')"
+			arquitetura_comando="\t"$(arch)""
 			;;
 		cygwin)
 			# comandos do Cygwin
@@ -72,6 +74,11 @@ case "$current_so" in
 esac
 }
 
+# funcao para pegar as informacoes do MacOS baseado no 'system_profiler'
+function get_info_mac(){
+	system_profiler "$1" | grep "$2" | cut -d ":" -f2 | cut -c2-
+}
+
 # Main
 # ----------------------------------------------------------------------------
 
@@ -79,10 +86,13 @@ verifica_so
 
 echo -e ""$cor_amarelo""$usuario":"$fecha_cor""$usuario_comando""
 echo -e ""$cor_amarelo""$hostname":"$fecha_cor""$hostname_comando""
-#echo -e "Model name: $(/usr/sbin/system_profiler SPHardwareDataType | grep "Model Name" | cut -d ":" -f2 | cut -c2-)"
-echo -e ""$cor_amarelo""$SO":"$fecha_cor""$SO_comando""
-#echo -e "SO: $(uname -s)" ---  Para o Mac
-echo -e ""$cor_amarelo""$distribuicao":"$fecha_cor""$distribuicao_comando""
+if [ $(uname -s) = 'Linux' ]; then
+	echo -e ""$cor_amarelo""$SO":"$fecha_cor""$SO_comando""
+	echo -e ""$cor_amarelo""$distribuicao":"$fecha_cor""$distribuicao_comando""
+elif [ $(uname -s) = 'Darwin' ]; then
+	echo -e ""$cor_amarelo""$computador":"$fecha_cor""$computador_comando""
+	echo -e ""$cor_amarelo""$versao":"$fecha_cor""$versao_comando""
+fi
 echo -e ""$cor_amarelo""$memoria":"$fecha_cor""$memoria_comando""
 echo -e ""$cor_amarelo""$processador":"$fecha_cor""$processador_comando""
 echo -e ""$cor_amarelo""$arquitetura":"$fecha_cor""$arquitetura_comando""
