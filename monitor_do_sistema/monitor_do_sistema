@@ -28,7 +28,7 @@ case "$current_so" in
 			usuario_comando="\t"$(whoami)" - "$(uptime | cut -d " " -f4-5 | sed s/,//)""
 			hostname_comando="\t"$(hostname)""
 			SO_comando="\t\t"$(uname -s)""
-			distribuicao_comando="\t"$(lsb_release -sd)""
+			distribuicao_comando="\t"$(lsb_release -sd)" - ($(lsb_release -sc))"
 			memoria_comando="\t$(free -g | grep "Mem" | cut -d ":" -f2 | sed s/\ //g | cut -c1)G"
 			processador_comando="\t"$(grep "model name" /proc/cpuinfo | uniq | cut -d ":" -f2 | sed s/\ //)"\
 					x"$(grep "model name" /proc/cpuinfo | wc -l)""
