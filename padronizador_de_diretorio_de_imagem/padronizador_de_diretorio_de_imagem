@@ -29,40 +29,38 @@ script_dir=$(pwd)
 # funções
 # ----------------------------------------------------------------------------
 
+# funcao para trocar o ".1" de lugar.
+# eles são usados pelas zz para prevenir perda de arquivo.
+# Mas eles são colocadas no final pelo zzarrumanome ficando assim: 'arquivo.jpg.1'.
+# Logo, quando o script ia pra o proximo passo chamando a zznomefoto, ela ficava assim: 'foto-001.1'
+# comendo a extensão. A solução foi criar essa função e mover os ".1" de lugar ficando assim:
+# 'arquivo.jpg.1 --> arquivo.1.jpg', e quem faz isso é esses seds aí de baixo.
+# Dessa maneira, a extensão não é "comida" pelas zz, e quando a zznomefoto executar, vai ficar certinho, assim:
+# 'foto-001.jpg'. ;)
 function retirar_ponto_1(){
-local tipo_de_arquivo
-case "$1" in
-	f);;
-	d);;
-	*)
-		echo "opcao invalida"
-		exit 1
-		;;
-esac
-# retirando os arquivos que tem ".1" no final dos arquivoss (acho que é bug do zzarrumanome)
-for arquivo_ponto_1 in $(find "$diretorio_de_imagem" -type "$1" -iname "*.1"); 
+for arquivo_ponto_1 in $(find "$diretorio_de_imagem" -type "f" -iname "*.1"); 
 do 
-	mv -v $arquivo_ponto_1 $(echo $arquivo_ponto_1 | sed 's/.1//g'); 
+	path=$(echo $arquivo_ponto_1 | sed 's/\(.*\/\).*$/\1/');
+	nome_novo=$(echo $arquivo_ponto_1 | sed 's/.*\/\(.*$\)/\1/;s/\./.1./1;s/.1$//g'); 
+	mv -v $arquivo_ponto_1 "$path$nome_novo" 
 done
 
 }
-# ----------------------------------------------------------------------------
 
-# Main
-# ----------------------------------------------------------------------------
-# padronizando todo mundo com o zzarrumanome
+# padronizando todos os diretorios com o zzarrumanome
+# OBS: Teoricamente, não precisa do parametro '-r'
+# para a azzarrumanome, pois nesse caso, eu só quero 
+# renomear os diretorio. Mas se eu não fizer isso,
+# eu precisarei rodar a 'zzminusculas' e o loop se bobear
+# ficaria até maior. Com o '-r' ele roda a 'zzminusculas' por baixo.
+function padroniza_nome(){
 cd $funcoeszz_dir
 ./funcoeszz zzarrumanome -d -r "$diretorio_de_imagem"*
 cd "$script_dir"
-
-# retirando os ".1" de todos os arquivos.
-# Isso é necessário no caso de arquivo duplicado, o Linux coloca um '.<formato>.1'
-# OBS: esse loope está quebrado em 2, pq se ele fizer tudo de uma vez
-# ele vai dizer q o diretorio não existe mais (pq já tinha sido renomeado antes)
-retirar_ponto_1 "d"
-retirar_ponto_1 "f"
+}
 
 # renomeando todos os arquivos
+function renomea_todos_os_arquivos(){
 cd $funcoeszz_dir
 for diretorio in "$diretorio_de_imagem"*;
 do
@@ -76,8 +74,23 @@ do
 	fi
 done
 cd "$script_dir"
+}
+# ----------------------------------------------------------------------------
 
-# procura por arquivos sem extensão e coloca um ".jpg" no final
-# OBS: linha necessária por causa da função 'retirar_ponto_1'
-find "$diretorio_de_imagem" -type f ! -iname "*.*" -exec mv {} {}.jpg \;
+# Main
+# ----------------------------------------------------------------------------
+
+if [ "$diretorio_de_imagem" = "" ];then
+	echo "Uso: padronizador_de_diretorio_de_imagem <diretorio_de_imagem>"
+	exit 1
+fi
+
+if [ ! -e "$diretorio_de_imagem" ];then
+	echo "diretorio nao existe"
+	exit 1
+fi
+
+padroniza_nome
+retirar_ponto_1
+renomea_todos_os_arquivos
 # ----------------------------------------------------------------------------
