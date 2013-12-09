@@ -10,45 +10,100 @@
 # Versão: 1
 # ----------------------------------------------------------------------------
 
+# Variáveis
+# ----------------------------------------------------------------------------
+
 #path onde o java será instalado
 path_java="/usr/lib/jvm"
-#pacote .tar.gz do donwload do JDK, recebida por parametro
-jdk_tar_gz=$1
+#pacote .tar.gz
+jdk_tar_gz=""
 
+# versões que serão instaladas do JDK
+jdk_64bits='jdk-7u45-linux-x64.tar.gz'
+jdk_32bits='jdk-7u45-linux-i586.tar.gz'
+
+# URL de download dosJDK
+jdk_url_64bits='http://download.oracle.com/otn-pub/java/jdk/7u45-b18/'$jdk_64bits
+jdk_url_32bits='http://download.oracle.com/otn-pub/java/jdk/7u45-b18/'$jdk_32bits
+
+# cores
+cor_amarelo="\033[33m"
+cor_vermelho="\033[31m"
+fecha_cor="\033[m"
+
+# Funções
+# ----------------------------------------------------------------------------
+
+# imprime msg amarelo
+function print_info(){
+echo -e "${cor_amarelo}"$1"${fecha_cor}"
+}
+
+# imprime msg vermelho 
+function print_erro(){
+echo -e "${cor_vermelho}$1${fecha_cor}"
+}
+
+# faz o donwload do JDK
+function baixar_jdk(){
+	wget --no-cookies --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com" "$1"
+}
+
+function validacoes(){
 # verifica se o script foi rodado com sudo
 if [ ! $(id -u) -eq 0 ];then
-		echo "rode o script com sudo"
+		print_erro "rode o script com sudo"
 		exit 1
 fi
 
-# Verifica a arquitetura do SO e verifica a arquitetura do pacote
-if [ $(arch) = 'x86_64' -a $(echo "$jdk_tar_gz" | grep "x64" > /dev/null; echo $?) -eq 1 ];then
-		echo "seus sistema eh 64 bits mas essa JDK passada por parametro eh 32."
-		echo "Instale a JDK correta"
-		exit 1
-elif [ ! $(arch) = 'x86_64' -a $(echo "$jdk_tar_gz" | grep "x64" > /dev/null; echo $?) -eq 0 ];then
-		echo "seus sistema eh 32 bits mas essa JDK passada por parametro eh 64."
-		echo "Instale a JDK correta"
-		exit 1
-fi
-
-# verificando se o arquivo passado por parametro existe
-if [ ! -e "$jdk_tar_gz" ];then
-		echo "arquivo não existe"
-		exit 1
-fi
-
-# Verificando se o arquivo passado termina com .tar.gz
-if [ $(echo "$jdk_tar_gz | egrep '.tar.gz$' > /dev/null;echo $?") -eq 1 ];then
-		echo "esse arquivo passado por parametro, não termina com .tar.gz"
-		exit 1
+# Verifica a arquitetura do SO e faz o download do tar.gz
+print_info "baixando JDK"
+if [ $(arch) = 'x86_64' ];then
+	baixar_jdk "$jdk_url_64bits"
+	jdk_tar_gz="$jdk_64bits"
+else
+	baixar_jdk "$jdk_url_32bits"
+	jdk_tar_gz="$jdk_32bits"
 fi
 
 # verificando se o path já existe
 if [ ! -d $path_java ]; then
-	echo "criando diretório java em $path_java"
+	print_info "criando diretório java em $path_java"
 	mkdir -p $path_java
 fi
+}
+
+#Informando ao Ubuntu aonde sua instalação do Java está localizada
+function install_location(){
+print_info "informando onde está sua localização padrão do java"
+update-alternatives --install "/usr/bin/javac" "javac" "$path_java/$java/bin/javac" 1
+update-alternatives --install "/usr/bin/java" "java" "$path_java/$java/bin/java" 1
+}
+
+#Informando ao Ubuntu que esse é a sua instalação default de Java
+function install_set_default(){
+print_info "Informando que essa é sua instalação default do java"
+update-alternatives --set "javac" "$path_java/$java/bin/javac"
+update-alternatives --set "java" "$path_java/$java/bin/java"
+}
+
+#atualizando o path no /etc/profile
+function update_profile(){
+echo "" >> /etc/profile
+echo "#------- instalação do java -------" >> /etc/profile
+echo "JAVA_HOME=$path_java/java" >> /etc/profile
+echo 'PATH=$PATH:$JAVA_HOME/bin' >> /etc/profile
+echo 'export JAVA_HOME' >> /etc/profile
+echo 'export PATH' >> /etc/profile
+
+#reload no /etc/profile
+. /etc/profile
+}
+
+# Main
+# ----------------------------------------------------------------------------
+
+validacoes
 
 # pegando o nome do diretorio que o tar.gz vai extrair
 java=$(tar -tf $jdk_tar_gz | cut -d "/" -f1 | uniq)
@@ -61,26 +116,8 @@ tar -xzvf *.tar.gz
 #deletando todos os tar.gz
 rm *.tar.gz
 
-#Informando ao Ubuntu aonde sua instalação do Java está localizada
-echo "informando onde está sua localização padrão do java"
-update-alternatives --install "/usr/bin/javac" "javac" "$path_java/$java/bin/javac" 1
-update-alternatives --install "/usr/bin/java" "java" "$path_java/$java/bin/java" 1
+install_location
+install_set_default
+update_profile
 
-#Informando ao Ubuntu que esse é a sua instalação default de Java
-echo "Informando que essa é sua instalação default do java"
-update-alternatives --set "javac" "$path_java/$java/bin/javac"
-update-alternatives --set "java" "$path_java/$java/bin/java"
-
-#atualizando o path no /etc/profile
-echo "" >> /etc/profile
-echo "#------- instalação do java -------" >> /etc/profile
-echo "JAVA_HOME=$path_java/java" >> /etc/profile
-echo 'PATH=$PATH:$JAVA_HOME/bin' >> /etc/profile
-echo 'export JAVA_HOME' >> /etc/profile
-echo 'export PATH' >> /etc/profile
-
-#reload no /etc/profile
-. /etc/profile
-
-
-
+print_info "JDK instalado com sucesso"
