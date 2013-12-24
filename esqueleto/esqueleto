@@ -30,17 +30,17 @@ fecha_cor="\033[m"
 
 # imprime msg amarelo
 function print_info(){
-echo -e "${cor_amarelo}"$1"${fecha_cor}"
+	echo -e "${cor_amarelo}"$1"${fecha_cor}"
 }
 
 # imprime msg verde
 function print_success(){
-echo -e "${cor_verde}"$1"${fecha_cor}"
+	echo -e "${cor_verde}"$1"${fecha_cor}"
 }
 
 # imprime msg vermelho 
 function print_erro(){
-echo -e "${cor_vermelho}$1${fecha_cor}"
+	echo -e "${cor_vermelho}$1${fecha_cor}"
 }
 
 
@@ -106,17 +106,17 @@ function criar_script(){
 	preenche_script ""
 	preenche_script "# imprime msg amarelo"
 	preenche_script "function print_info(){"
-	preenche_script 'echo -e "${cor_amarelo}"$1"${fecha_cor}"'
+	preenche_script '	echo -e "${cor_amarelo}"$1"${fecha_cor}"'
 	preenche_script "}"
 	preenche_script ""
 	preenche_script "# imprime msg verde"
 	preenche_script "function print_success(){"
-	preenche_script 'echo -e "${cor_verde}"$1"${fecha_cor}"'
+	preenche_script '	echo -e "${cor_verde}"$1"${fecha_cor}"'
 	preenche_script "}"
 	preenche_script ""
 	preenche_script "# imprime msg vermelho"
 	preenche_script "function print_erro(){"
-	preenche_script 'echo -e "${cor_vermelho}$1${fecha_cor}"'
+	preenche_script '	echo -e "${cor_vermelho}$1${fecha_cor}"'
 	preenche_script "}"
 	preenche_script ""
 	preenche_script "# Main"
