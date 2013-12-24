@@ -14,10 +14,28 @@
 
 # cores
 cor_amarelo="\033[33m"
+cor_verde="\033[32m"
+cor_vermelho="\033[31m"
 fecha_cor="\033[m"
 
 # Funcoes
 # ----------------------------------------------------------------------------
+
+# imprime msg amarelo
+function print_info(){
+echo -e "${cor_amarelo}"$1"${fecha_cor}"$2""
+}
+
+# imprime msg verde
+function print_success(){
+echo -e "${cor_verde}"$1"${fecha_cor}"
+}
+
+# imprime msg vermelho 
+function print_erro(){
+echo -e "${cor_vermelho}$1${fecha_cor}"
+}
+
 
 # funcao para verificar o SO corrente e chamar seus respectivos comandos
 function verifica_so(){
@@ -73,15 +91,17 @@ function get_info_mac(){
 
 verifica_so
 
-echo -e "${cor_amarelo}usuario:${fecha_cor}${usuario_comando}"
-echo -e "${cor_amarelo}hostname:${fecha_cor}${hostname_comando}"
+print_info "usuario:" "${usuario_comando}"
+print_info "hostname:" "${hostname_comando}"
 if [ $(uname -s) = 'Linux' ]; then
-	echo -e "${cor_amarelo}SO:${fecha_cor}${SO_comando}"
-	echo -e "${cor_amarelo}distribuicao:${fecha_cor}${distribuicao_comando}"
+	print_info "SO:" "${SO_comando}"
+	print_info "distribuicao:" "${distribuicao_comando}"
 elif [ $(uname -s) = 'Darwin' ]; then
-	echo -e "${cor_amarelo}computador:${fecha_cor}${computador_comando}"
-	echo -e "${cor_amarelo}versao:${fecha_cor}$versao_comando}"
+	print_info "computador:" "${computador_comando}"
+	print_info "versao:" "${versao_comando}"
 fi
-echo -e "${cor_amarelo}memoria:${fecha_cor}${memoria_comando}"
-echo -e "${cor_amarelo}processador:${fecha_cor}"${processador_comando}""
-echo -e "${cor_amarelo}arquitetura:${fecha_cor}${arquitetura_comando}"
+print_info "memoria:" "${memoria_comando}"
+print_info "processador:" "${processador_comando}"
+print_info "arquitetura:" "${arquitetura_comando}"
+
+
