@@ -17,6 +17,8 @@
 # ----------------------------------------------------------------------------
 nome_do_script="$1"
 readme="README.md"
+nome_do_usuario=""
+email_do_usuario=""
 
 # cores
 cor_amarelo="\033[33m"
@@ -57,6 +59,17 @@ function validacoes(){
 		print_erro "Script já existe com esse nome"
 		exit 1
 	fi
+
+	# pegando as configurações do git para preencher o cabeçalho.
+	if [ $(which git > /dev/null; echo $?) == "0" ];then
+		email_do_usuario="$(cd ~; git config --list | grep "user.email" | cut -d "=" -f2; cd - > /dev/null)"
+		nome_do_usuario="$(cd ~; git config --list | grep "user.name" | cut -d "=" -f2; cd - > /dev/null)"
+	# se não tiver git instalado ,coloque o nome do usuario corrente no script, 
+	# e coloque um TODO no email
+	else
+		nome_do_usuario=$(whoami)
+		email_do_usuario="TODO: email@email.com"
+	fi
 }
 
 # função para escrever o script
@@ -80,7 +93,7 @@ function criar_script(){
 	preenche_script "# Uso:"
 	preenche_script "# Ex.: "
 	preenche_script "#"
-	preenche_script "# Autor: Frank Junior <frankcbjunior@gmail.com>"
+	preenche_script "# Autor: $nome_do_usuario <$email_do_usuario>"
 	preenche_script "# Desde: $(date +%Y-%m-%d)"
 	preenche_script "# Versão: 1"
 	preenche_script "# ----------------------------------------------------------------------------"
