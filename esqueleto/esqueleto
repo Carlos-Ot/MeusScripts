@@ -20,6 +20,10 @@ readme="README.md"
 nome_do_usuario=""
 email_do_usuario=""
 
+# DEBUG = 0, desligado
+# DEBUG = 1, ligado
+DEBUG=0
+
 # cores
 cor_amarelo="\033[33m"
 cor_verde="\033[32m"
@@ -30,19 +34,24 @@ fecha_cor="\033[m"
 # Funcoes
 # ----------------------------------------------------------------------------
 
+# funcao de debug
+function debug(){
+	[ "$DEBUG" = 1 ] && echo "[DEBUG] $*"
+}
+
 # imprime msg amarelo
 function print_info(){
-	echo -e "${cor_amarelo}"$1"${fecha_cor}"
+	printf "${cor_amarelo}$1${fecha_cor}\n"
 }
 
 # imprime msg verde
 function print_success(){
-	echo -e "${cor_verde}"$1"${fecha_cor}"
+	printf "${cor_verde}$1${fecha_cor}\n"
 }
 
 # imprime msg vermelho 
 function print_erro(){
-	echo -e "${cor_vermelho}$1${fecha_cor}"
+	printf "${cor_vermelho}$1${fecha_cor}\n"
 }
 
 
@@ -101,6 +110,10 @@ function criar_script(){
 	preenche_script "# Variáveis"
 	preenche_script "# ----------------------------------------------------------------------------"
 	preenche_script ""
+	preenche_script "# DEBUG = 0, desligado"
+	preenche_script "# DEBUG = 1, ligado"
+	preenche_script "DEBUG=0"
+	preenche_script ""
 	preenche_script "# cores"
 	preenche_script "cor_amarelo=\"\033[33m\""
 	preenche_script "cor_verde=\"\033[32m\""
@@ -112,6 +125,11 @@ function criar_script(){
 	preenche_script ""
 	preenche_script "function validacoes(){"
 	preenche_script ""
+	preenche_script "# funcao de debug"
+	preenche_script "function debug(){"
+	preenche_script '    [ "$DEBUG" = 1 ] && echo "[DEBUG] $*"'
+	preenche_script "}"
+	preenche_script ""
 	preenche_script "# TODO validacoes aqui..."
 	preenche_script 'echo ""'
 	preenche_script ""
@@ -119,17 +137,17 @@ function criar_script(){
 	preenche_script ""
 	preenche_script "# imprime msg amarelo"
 	preenche_script "function print_info(){"
-	preenche_script '	echo -e "${cor_amarelo}"$1"${fecha_cor}"'
+	preenche_script '	printf "${cor_amarelo}$1${fecha_cor}\n"'
 	preenche_script "}"
 	preenche_script ""
 	preenche_script "# imprime msg verde"
 	preenche_script "function print_success(){"
-	preenche_script '	echo -e "${cor_verde}"$1"${fecha_cor}"'
+	preenche_script '	printf "${cor_verde}$1${fecha_cor}\n"'
 	preenche_script "}"
 	preenche_script ""
 	preenche_script "# imprime msg vermelho"
 	preenche_script "function print_erro(){"
-	preenche_script '	echo -e "${cor_vermelho}$1${fecha_cor}"'
+	preenche_script '	printf "${cor_vermelho}$1${fecha_cor}\n"'
 	preenche_script "}"
 	preenche_script ""
 	preenche_script "# Main"
@@ -173,12 +191,16 @@ validacoes
 
 # criando o diretorio do script
 mkdir "$nome_do_script"
+
 # entrando no diretorio do script
 cd "$nome_do_script"
+
 # criando um arquivo em branco com o nome do script
 touch "$nome_do_script"
+
 # dando permissão de execução pro script
 chmod +x "$nome_do_script"
+
 criar_script
 criar_readme
 git_init
