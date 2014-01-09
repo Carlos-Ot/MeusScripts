@@ -13,6 +13,21 @@
 # Versão: 1
 # ----------------------------------------------------------------------------
 
+# Configurações
+# ----------------------------------------------------------------------------
+
+# set:
+# -e: se encontrar algum erro, termina a execução imediatamente
+set -e
+
+# import da lib_alfred
+if [ -z "$LIB_ALFRED" ];then
+	echo '[ERRO] provalvelmente, a $LIB_ALFRED nao foi instalada'
+	exit 1
+else
+	source "$LIB_ALFRED"
+fi
+
 # Variáveis
 # ----------------------------------------------------------------------------
 nome_do_script="$1"
@@ -24,12 +39,6 @@ email_do_usuario=""
 # DEBUG = 1, ligado
 DEBUG=0
 
-# cores
-cor_amarelo="\033[33m"
-cor_verde="\033[32m"
-cor_vermelho="\033[31m"
-fecha_cor="\033[m"
-
 
 # Funcoes
 # ----------------------------------------------------------------------------
@@ -39,33 +48,17 @@ function debug(){
 	[ "$DEBUG" = 1 ] && echo "[DEBUG] $*"
 }
 
-# imprime msg amarelo
-function print_info(){
-	printf "${cor_amarelo}$1${fecha_cor}\n"
-}
-
-# imprime msg verde
-function print_success(){
-	printf "${cor_verde}$1${fecha_cor}\n"
-}
-
-# imprime msg vermelho 
-function print_erro(){
-	printf "${cor_vermelho}$1${fecha_cor}\n"
-}
-
-
 function validacoes(){
 	# se não passar nenhum parametro, dá erro
 	if [ "$nome_do_script" == "" ];then
-		print_erro "# Uso: ./esqueleto <nome_do_novo_script>"
-		print_erro "# Ex.: ./esqueleto dummy_script"
+		lib_alfred-print_erro "# Uso: ./esqueleto <nome_do_novo_script>"
+		lib_alfred-print_erro "# Ex.: ./esqueleto dummy_script"
 		exit 1
 	fi
 
 	# verificando se o script já foi criado
 	if [ -d $nome_do_script ]; then
-		print_erro "Script já existe com esse nome"
+		lib_alfred-print_erro "Script já existe com esse nome"
 		exit 1
 	fi
 
@@ -97,7 +90,7 @@ function criar_script(){
 	preenche_script ""
 	preenche_script "# Cabeçalho"
 	preenche_script "# ----------------------------------------------------------------------------"
-	preenche_script "# Descrição..."
+	preenche_script "# TODO: Descrição..."
 	preenche_script "#"
 	preenche_script "# Uso:"
 	preenche_script "# Ex.: "
@@ -107,6 +100,21 @@ function criar_script(){
 	preenche_script "# Versão: 1"
 	preenche_script "# ----------------------------------------------------------------------------"
 	preenche_script ""
+	preenche_script "# Configurações"
+	preenche_script "# ----------------------------------------------------------------------------"
+	preenche_script ""
+	preenche_script "# set:"
+	preenche_script "# -e: se encontrar algum erro, termina a execução imediatamente"
+	preenche_script "set -e"
+	preenche_script ""
+	preenche_script "# import da lib_alfred"
+	preenche_script 'if [ -z "$LIB_ALFRED" ];then'
+	preenche_script '	echo ''[ERRO] provalvelmente, a $LIB_ALFRED nao foi instalada'''
+	preenche_script "	exit 1"
+	preenche_script "else"
+	preenche_script '	source "$LIB_ALFRED"'
+	preenche_script "fi"
+	preenche_script ""
 	preenche_script "# Variáveis"
 	preenche_script "# ----------------------------------------------------------------------------"
 	preenche_script ""
@@ -114,40 +122,19 @@ function criar_script(){
 	preenche_script "# DEBUG = 1, ligado"
 	preenche_script "DEBUG=0"
 	preenche_script ""
-	preenche_script "# cores"
-	preenche_script "cor_amarelo=\"\033[33m\""
-	preenche_script "cor_verde=\"\033[32m\""
-	preenche_script "cor_vermelho=\"\033[31m\""
-	preenche_script "fecha_cor=\"\033[m\""
-	preenche_script ""
 	preenche_script "# Funções"
 	preenche_script "# ----------------------------------------------------------------------------"
-	preenche_script ""
-	preenche_script "function validacoes(){"
 	preenche_script ""
 	preenche_script "# funcao de debug"
 	preenche_script "function debug(){"
 	preenche_script '    [ "$DEBUG" = 1 ] && echo "[DEBUG] $*"'
 	preenche_script "}"
 	preenche_script ""
+	preenche_script "function validacoes(){"
+	preenche_script ""
 	preenche_script "# TODO validacoes aqui..."
 	preenche_script 'echo ""'
 	preenche_script ""
-	preenche_script "}"
-	preenche_script ""
-	preenche_script "# imprime msg amarelo"
-	preenche_script "function print_info(){"
-	preenche_script '	printf "${cor_amarelo}$1${fecha_cor}\n"'
-	preenche_script "}"
-	preenche_script ""
-	preenche_script "# imprime msg verde"
-	preenche_script "function print_success(){"
-	preenche_script '	printf "${cor_verde}$1${fecha_cor}\n"'
-	preenche_script "}"
-	preenche_script ""
-	preenche_script "# imprime msg vermelho"
-	preenche_script "function print_erro(){"
-	preenche_script '	printf "${cor_vermelho}$1${fecha_cor}\n"'
 	preenche_script "}"
 	preenche_script ""
 	preenche_script "# Main"
@@ -158,7 +145,8 @@ function criar_script(){
 	preenche_script "# codigo aqui..."
 	preenche_script ""
 	preenche_script "# TODO: trocar essa mensagem"
-	preenche_script "print_success \"Ola, meu nome eh \"$nome_do_script\"\""
+	preenche_script "lib_alfred-print_success \"Ola, meu nome eh \"$nome_do_script\"\""
+	preenche_script ""
 }
 
 # função que cria as linhas do README.md
@@ -176,10 +164,12 @@ function criar_readme(){
 # versionar o script com o git
 function git_init(){
 
+	echo "*~" > .gitignore
+
 	if [ $(which git > /dev/null; echo $?) == "0" ];then
 		git init > /dev/null
-		git add "$readme" "$nome_do_script"
-		git commit -m "criado o esqueleto do commit" > /dev/null
+		git add "$readme" "$nome_do_script" .gitignore
+		git commit -m "criado o esqueleto do $nome_do_script" > /dev/null
 	fi
 
 }
@@ -205,4 +195,4 @@ criar_script
 criar_readme
 git_init
 
-print_success "script "$nome_do_script" criado com sucesso"
+lib_alfred-print_success "script "$nome_do_script" criado com sucesso"
