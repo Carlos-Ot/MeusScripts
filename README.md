@@ -1,7 +1,13 @@
 MeusScripts
 ===========
 
+## Descrição
 Scripts simples, de uso próprio.
+
+## Dependência
+Todos os scripts são dependentes da [lib_alfred](https://github.com/frankjuniorr/lib_alfred), então, certifique-se que ela está instalada, para que você possa usar os scripts
+
+## Scripts
 
 Os scrips são:
 
