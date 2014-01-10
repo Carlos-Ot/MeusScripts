@@ -34,6 +34,8 @@ nome_do_script="$1"
 readme="README.md"
 nome_do_usuario=""
 email_do_usuario=""
+lib='$LIB_ALFRED'
+debug='$DEBUG'
 
 # DEBUG = 0, desligado
 # DEBUG = 1, ligado
@@ -74,91 +76,84 @@ function validacoes(){
 	fi
 }
 
-# função para escrever o script
-function preenche_script(){
-	echo "$1" >> "$nome_do_script"
-}
-
-# função para escrever o README.md
-function preenche_readme(){
-	echo "$1" >> $readme""
-}
-
 # Função que cria as linhas do script
 function criar_script(){
-	preenche_script "#!/bin/bash"
-	preenche_script ""
-	preenche_script "# Cabeçalho"
-	preenche_script "# ----------------------------------------------------------------------------"
-	preenche_script "# TODO: Descrição..."
-	preenche_script "#"
-	preenche_script "# Uso:"
-	preenche_script "# Ex.: "
-	preenche_script "#"
-	preenche_script "# Autor: $nome_do_usuario <$email_do_usuario>"
-	preenche_script "# Desde: $(date +%Y-%m-%d)"
-	preenche_script "# Versão: 1"
-	preenche_script "# ----------------------------------------------------------------------------"
-	preenche_script ""
-	preenche_script "# Configurações"
-	preenche_script "# ----------------------------------------------------------------------------"
-	preenche_script ""
-	preenche_script "# set:"
-	preenche_script "# -e: se encontrar algum erro, termina a execução imediatamente"
-	preenche_script "set -e"
-	preenche_script ""
-	preenche_script "# import da lib_alfred"
-	preenche_script 'if [ -z "$LIB_ALFRED" ];then'
-	preenche_script '	echo ''[ERRO] provalvelmente, a $LIB_ALFRED nao foi instalada'''
-	preenche_script "	exit 1"
-	preenche_script "else"
-	preenche_script '	source "$LIB_ALFRED"'
-	preenche_script "fi"
-	preenche_script ""
-	preenche_script "# Variáveis"
-	preenche_script "# ----------------------------------------------------------------------------"
-	preenche_script ""
-	preenche_script "# DEBUG = 0, desligado"
-	preenche_script "# DEBUG = 1, ligado"
-	preenche_script "DEBUG=0"
-	preenche_script ""
-	preenche_script "# Funções"
-	preenche_script "# ----------------------------------------------------------------------------"
-	preenche_script ""
-	preenche_script "# funcao de debug"
-	preenche_script "function debug(){"
-	preenche_script '    [ "$DEBUG" = 1 ] && echo "[DEBUG] $*"'
-	preenche_script "}"
-	preenche_script ""
-	preenche_script "function validacoes(){"
-	preenche_script ""
-	preenche_script "# TODO validacoes aqui..."
-	preenche_script 'echo ""'
-	preenche_script ""
-	preenche_script "}"
-	preenche_script ""
-	preenche_script "# Main"
-	preenche_script "# ----------------------------------------------------------------------------"
-	preenche_script ""
-	preenche_script "validacoes"
-	preenche_script ""
-	preenche_script "# codigo aqui..."
-	preenche_script ""
-	preenche_script "# TODO: trocar essa mensagem"
-	preenche_script "lib_alfred-print_success \"Ola, meu nome eh \"$nome_do_script\"\""
-	preenche_script ""
+	
+echo "#!/bin/bash
+
+# Cabeçalho
+# ----------------------------------------------------------------------------
+# TODO: Descrição...
+#
+# Uso:
+# Ex.: 
+#
+# Autor: $nome_do_usuario <$email_do_usuario>
+# Desde: $(date +%Y-%m-%d)
+# Versão: 1
+# ----------------------------------------------------------------------------
+
+# Configurações
+# ----------------------------------------------------------------------------
+
+# set:
+# -e: se encontrar algum erro, termina a execução imediatamente
+set -e
+
+# import da lib_alfred
+if [ -z \"$lib\" ];then
+	echo '[ERRO] provalvelmente, a $lib nao foi instalada'
+	exit 1
+else
+	source \"$lib\"
+fi
+
+# Variáveis
+# ----------------------------------------------------------------------------
+
+# DEBUG = 0, desligado
+# DEBUG = 1, ligado
+DEBUG=0
+
+# Funções
+# ----------------------------------------------------------------------------
+
+# funcao de debug
+function debug(){
+	[ \"$debug\" = 1 ] && echo \"[DEBUG] $*\"
+}
+
+function validacoes(){
+
+# TODO validacoes aqui...
+echo \"\"
+
+}
+
+# Main
+# ----------------------------------------------------------------------------
+
+validacoes
+
+# codigo aqui...
+
+# TODO: trocar essa mensagem
+lib_alfred-print_success \"Ola, meu nome eh \"$nome_do_script\"\"
+" > "$nome_do_script"
 }
 
 # função que cria as linhas do README.md
 function criar_readme(){
-	preenche_readme	"$nome_do_script"
-	preenche_readme	"==========="
-	preenche_readme	""
-	preenche_readme	"# Descrição..."
-	preenche_readme	""
-	preenche_readme	"Uso: \`./"$nome_do_script"\`"
-	preenche_readme	""
-	preenche_readme	"Ex: \`./"$nome_do_script"\`"
+	
+echo "$nome_do_script
+===========
+
+# Descrição...
+
+Uso: \`./"$nome_do_script"\`
+
+Ex: \`./"$nome_do_script"\`
+" > "$readme"
 }
 
 # versionar o script com o git
