@@ -42,6 +42,8 @@ echo -e "${cor_amarelo}"$1"${fecha_cor}"$2""
 # funcao para verificar o SO corrente e chamar seus respectivos comandos
 function verifica_so(){
 local current_so="$(uname -s)"
+local memoria_valor=""
+
 case "$current_so" in
 		Linux)
 			# comandos do Linux
@@ -49,7 +51,8 @@ case "$current_so" in
 			hostname_comando="\t"$(hostname)""
 			SO_comando="\t\t"$(uname -s)""
 			distribuicao_comando="\t"$(lsb_release -sd)" - ($(lsb_release -sc))"
-			memoria_comando="\t$(free -g | grep "Mem" | cut -d ":" -f2 | sed s/\ //g | cut -c1)G"
+			memoria_valor=$(free -m | grep "Mem" | awk '{print $2}')
+			memoria_comando="\t$(echo "scale=2; $memoria_valor/1000" | bc) GB"
 			processador_comando="\t"$(grep "model name" /proc/cpuinfo | uniq | cut -d ":" -f2 | sed s/\ //)"\
 					x"$(grep "model name" /proc/cpuinfo | wc -l)""
 			arquitetura_comando="\t"$(arch)""
