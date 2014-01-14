@@ -3,8 +3,8 @@
 # Cabeçalho
 # ----------------------------------------------------------------------------
 # Função para checkar o formato de nomeclatura de toda a pasta de música.
-# Passando a lista de .mp3 por parametro (atraves do comando:
-# `find <pasta_de_musica> -iname "*mp3" > musicas.txt`)
+# Passando a lista de .mp3 por parametro 
+# (atraves do comando: `find <pasta_de_musica> -iname "*.mp3" > musicas.txt`)
 #
 # OBS: Levando em consideração que a arvore do diretorio de música
 # já está de acordo com os padrões do MusicOrganizer.
@@ -89,7 +89,7 @@ function validar_artista(){
 
 	# se estiver fora do padrão, grava iss em um arquivo temporário
 	if [[ ! "$artista" =~ $regex ]];then
-		echo "[$artista] - está fora do padrão" >> temp_artista.txt
+		echo "- $artista" >> temp_artista.txt
 	fi
 }
 
@@ -101,16 +101,39 @@ function validar_album(){
 	# seguido de espaço seguido de hifen seguido de espaço
 	local regex='^[0-9]{4} - '
 	# captura o album, excluido a pasta de 'Various Artists' e 'Tributes'
-	local album=$(echo "$linha" | grep -v "Various Artists\|Tributes" | cut -d "/" -f2-3)
+	local album_path=$(echo "$linha" | grep -v "Various Artists\|Tributes" | cut -d "/" -f2-3)
 	# capturando só o nome do album
-	local album_disco=$(echo $album | cut -d "/" -f2)
+	local album=$(echo $album_path | cut -d "/" -f2)
 
 	# se estiver fora do padrão, grava iss em um arquivo temporário
-	if [[ "$album_disco" != "" ]];then
-		if [[ ! "$album_disco" =~ $regex ]];then
-			echo "[$album] - está fora do padrão" >> temp_album.txt
+	if [[ "$album" != "" ]];then
+		if [[ ! "$album" =~ $regex ]];then
+			echo "- $album_path" >> temp_album.txt
 		fi
 	fi
+}
+
+# função para validar o nome das músicas
+function validar_musicas(){
+
+	local linha="$1"
+	# regex: verifica se começa com 2 numeros
+	# seguido de espaço, seguido de hífen, seguido de espaço
+	# seguido de uma letra maiuscula
+	local regex='^[0-9]{2} - [A-Z]'
+	# captura a musica excluiindo a pasta de 'Various Artists', 'Tributes' e os disco duplo
+	local musica_path=$(echo "$linha" | grep -v "Various Artists\|Tributes" | cut -d "/" -f2-4 | grep -v "CD[12]")
+	# captura só o nome da musica
+	local musica=$(echo $musica_path | cut -d "/" -f3)
+
+
+	# se estiver fora do padrão, grava iss em um arquivo temporário
+	if [[ "$musica" != "" ]];then
+		if [[ ! "$musica" =~ $regex ]];then
+			echo "- $musica_path" >> temp_musica.txt
+		fi
+	fi
+
 }
 
 # função que gera o arquivo de resultado
@@ -123,15 +146,24 @@ function gerar_resultado(){
 	sed -i "1s/^/--------------------------------------\n/" temp_album.txt
 	sed -i "1s/^/albums fora do padrão\n/" temp_album.txt
 
+	sed -i "1s/^/--------------------------------------\n/" temp_musica.txt
+	sed -i "1s/^/musicas fora do padrão\n/" temp_musica.txt
+
 	# escrevendo o conteúdo do 'temp_artista.txt' para o arquivo 'resultado.txt'
 	# removendo as linhas em branco, e unificando as linhas duplicadas
 	sed : temp_artista.txt | sed '/^$/d' | uniq > resultado.txt
 	# adicinando uma linha em branco
 	echo "" >> resultado.txt
 
-	# escrevendo o conteúdo do 'temp_aalbum.txt' para o arquivo 'resultado.txt'
+	# escrevendo o conteúdo do 'temp_album.txt' para o arquivo 'resultado.txt'
 	# removendo as linhas em branco, e unificando as linhas duplicadas
 	sed : temp_album.txt | sed '/^$/d' | uniq >> resultado.txt
+	# adicinando uma linha em branco
+	echo "" >> resultado.txt
+
+	# escrevendo o conteúdo do 'temp_musica.txt' para o arquivo 'resultado.txt'
+	# removendo as linhas em branco, e unificando as linhas duplicadas
+	sed : temp_musica.txt | sed '/^$/d' | uniq >> resultado.txt
 	# adicinando uma linha em branco
 	echo "" >> resultado.txt
 
@@ -155,6 +187,9 @@ function leitura(){
 		# valida o nome do album de cada linha da lista
 		validar_album "$linha"
 	
+		# valida o nome da musica de cada linha da lista
+		validar_musicas "$linha"
+
 	done
 	
 	# gera o arquivo de resultado
@@ -169,6 +204,7 @@ antes=$(date +%s)
 # limpa os arquivos temporários
 echo "" > temp_artista.txt
 echo "" > temp_album.txt
+echo "" > temp_musica.txt
 
 # executa as validações
 validacoes
