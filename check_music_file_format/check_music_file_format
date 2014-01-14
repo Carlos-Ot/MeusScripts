@@ -1,0 +1,185 @@
+#!/bin/bash
+
+# Cabeçalho
+# ----------------------------------------------------------------------------
+# Função para checkar o formato de nomeclatura de toda a pasta de música.
+# Passando a lista de .mp3 por parametro (atraves do comando:
+# `find <pasta_de_musica> -iname "*mp3" > musicas.txt`)
+#
+# OBS: Levando em consideração que a arvore do diretorio de música
+# já está de acordo com os padrões do MusicOrganizer.
+# Para mais informações sobre o formato de nomeclatura e a árvore de diretório
+# Acesse: [https://github.com/frankjuniorr/MusicOrganizer]
+#
+# Uso:
+#	./check_music_file_format <lista_de_musicas>
+#
+# Ex.: 
+#	./check_music_file_format musicas.txt
+#
+# Autor: Frank Junior <frankcbjunior@gmail.com>
+# Desde: 2014-01-13
+# Versão: 1
+# ----------------------------------------------------------------------------
+
+# Configurações
+# ----------------------------------------------------------------------------
+
+# set:
+# -e: se encontrar algum erro, termina a execução imediatamente
+set -e
+
+# import da lib_alfred
+if [ -z "$LIB_ALFRED" ];then
+	echo '[ERRO] provalvelmente, a $LIB_ALFRED nao foi instalada'
+	exit 1
+else
+	source "$LIB_ALFRED"
+fi
+
+# Variáveis
+# ----------------------------------------------------------------------------
+
+# DEBUG = 0, desligado
+# DEBUG = 1, ligado
+DEBUG=0
+
+LISTA_DE_MUSICAS="$1"
+
+# Funções
+# ----------------------------------------------------------------------------
+
+# funcao de debug
+function debug(){
+	[ "$DEBUG" = 1 ] && echo "[DEBUG] "
+}
+
+function validacoes(){
+
+local erro='
+ Uso:
+   ./check_music_file_format <lista_de_musicas>
+
+ Ex.: 
+   ./check_music_file_format musicas.txt
+'
+
+# verificando se foi passado algum parametro
+if [ "$LISTA_DE_MUSICAS" == "" ];then
+	lib_alfred-print_erro "$erro"
+	exit 1
+fi
+
+# verificando se o arquivo de configuração existe
+if [ ! -e "$LISTA_DE_MUSICAS" ];then
+	lib_alfred-print_erro ""$LISTA_DE_MUSICAS" não existe"
+	exit 1
+fi
+
+
+}
+
+# função para validar o nome do artista
+function validar_artista(){
+
+	local linha="$1"
+	# regex: verifica se começa com a primeira letra maiuscula
+	local regex='^[A-Z0-9]'
+	local artista=$(echo "$linha" | cut -d "/" -f2)
+
+	# se estiver fora do padrão, grava iss em um arquivo temporário
+	if [[ ! "$artista" =~ $regex ]];then
+		echo "[$artista] - está fora do padrão" >> temp_artista.txt
+	fi
+}
+
+# função para validar o nome do Album
+function validar_album(){
+
+	local linha="$1"
+	# regex: verifica se começa com 4 números
+	# seguido de espaço seguido de hifen seguido de espaço
+	local regex='^[0-9]{4} - '
+	# captura o album, excluido a pasta de 'Various Artists' e 'Tributes'
+	local album=$(echo "$linha" | grep -v "Various Artists\|Tributes" | cut -d "/" -f2-3)
+	# capturando só o nome do album
+	local album_disco=$(echo $album | cut -d "/" -f2)
+
+	# se estiver fora do padrão, grava iss em um arquivo temporário
+	if [[ "$album_disco" != "" ]];then
+		if [[ ! "$album_disco" =~ $regex ]];then
+			echo "[$album] - está fora do padrão" >> temp_album.txt
+		fi
+	fi
+}
+
+# função que gera o arquivo de resultado
+function gerar_resultado(){
+
+	# escrevendo um "cabeçalho" no arquivo temporário
+	sed -i "1s/^/--------------------------------------\n/" temp_artista.txt
+	sed -i "1s/^/artista fora do padrão\n/" temp_artista.txt
+	
+	sed -i "1s/^/--------------------------------------\n/" temp_album.txt
+	sed -i "1s/^/albums fora do padrão\n/" temp_album.txt
+
+	# escrevendo o conteúdo do 'temp_artista.txt' para o arquivo 'resultado.txt'
+	# removendo as linhas em branco, e unificando as linhas duplicadas
+	sed : temp_artista.txt | sed '/^$/d' | uniq > resultado.txt
+	# adicinando uma linha em branco
+	echo "" >> resultado.txt
+
+	# escrevendo o conteúdo do 'temp_aalbum.txt' para o arquivo 'resultado.txt'
+	# removendo as linhas em branco, e unificando as linhas duplicadas
+	sed : temp_album.txt | sed '/^$/d' | uniq >> resultado.txt
+	# adicinando uma linha em branco
+	echo "" >> resultado.txt
+
+	# lendo o resultado.txt
+	sed : resultado.txt
+}
+
+# função que lê a lista de música passada por parâmetro
+function leitura(){
+
+	local arquivo="$1"
+	
+	# varrendo a lista de música
+	# sed: O 'sed -n $=' é a mesma coisa que o 'wc -l'
+	for ((i=1;i<=$(sed -n $= $arquivo);i++));do
+		linha=$(sed : "$arquivo" | sed -n "$i"p)
+		
+		# valida o nome do artista de cada linha da lista
+		validar_artista "$linha"
+
+		# valida o nome do album de cada linha da lista
+		validar_album "$linha"
+	
+	done
+	
+	# gera o arquivo de resultado
+	gerar_resultado
+}
+
+# Main
+# ----------------------------------------------------------------------------
+
+antes=$(date +%s)
+
+# limpa os arquivos temporários
+echo "" > temp_artista.txt
+echo "" > temp_album.txt
+
+# executa as validações
+validacoes
+
+lib_alfred-print_info "checkando musicas..."
+
+# lê a lista de música
+leitura "$LISTA_DE_MUSICAS"
+# deleta todos os arquivos temporários
+rm temp*
+
+depois=$(date +%s)
+lib_alfred-calcula_tempo $(($depois-$antes))
+

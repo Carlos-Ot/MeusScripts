@@ -2,3 +2,4 @@
 *.swp
 dados.xml
 resultado.json
+check_music_file_format/*.txt
