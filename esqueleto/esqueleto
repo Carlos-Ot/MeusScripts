@@ -120,25 +120,32 @@ DEBUG=0
 
 # funcao de debug
 function debug(){
-	[ \"$debug\" = 1 ] && echo \"[DEBUG] $*\"
+	[ \"$debug\" = 1 ] && echo \"[DEBUG] \$*\"
 }
 
+# tratamento de validacoes
 function validacoes(){
+	echo \"\"
+}
 
-# TODO validacoes aqui...
-echo \"\"
+# tratamento das excecoes de interrupcoes
+function exception(){
+	echo \"\"
+}
 
+# funcao main
+function main(){
+	# TODO: trocar essa mensagem
+	lib_alfred-print_success \"Ola, meu nome eh $nome_do_script\"
 }
 
 # Main
 # ----------------------------------------------------------------------------
 
+# trata interrrupção do script em casos de ctrl + c (SIGINT) e kill (SIGTERM)
+trap exception SIGINT SIGTERM
 validacoes
-
-# codigo aqui...
-
-# TODO: trocar essa mensagem
-lib_alfred-print_success \"Ola, meu nome eh \"$nome_do_script\"\"
+main
 
 " > "$nome_do_script"
 }
@@ -174,26 +181,29 @@ function git_init(){
 
 }
 
+function main(){
+	# criando o diretorio do script
+	mkdir "$nome_do_script"
+
+	# entrando no diretorio do script
+	cd "$nome_do_script"
+
+	# criando um arquivo em branco com o nome do script
+	touch "$nome_do_script"
+
+	# dando permissão de execução pro script
+	chmod +x "$nome_do_script"
+
+	criar_script
+	criar_readme
+	git_init
+
+	lib_alfred-print_success "script "$nome_do_script" criado com sucesso"
+}
+
 # Main
 # ----------------------------------------------------------------------------
 
 validacoes
-
-# criando o diretorio do script
-mkdir "$nome_do_script"
-
-# entrando no diretorio do script
-cd "$nome_do_script"
-
-# criando um arquivo em branco com o nome do script
-touch "$nome_do_script"
-
-# dando permissão de execução pro script
-chmod +x "$nome_do_script"
-
-criar_script
-criar_readme
-git_init
-
-lib_alfred-print_success "script "$nome_do_script" criado com sucesso"
+main
 
