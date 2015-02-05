@@ -16,14 +16,6 @@
 # -e: se encontrar algum erro, termina a execução imediatamente
 set -e
 
-# import da lib_alfred
-if [ -z "$LIB_ALFRED" ];then
-	echo '[ERRO] provalvelmente, a $LIB_ALFRED nao foi instalada'
-	exit 1
-else
-	source "$LIB_ALFRED"
-fi
-
 # Variáveis
 # ----------------------------------------------------------------------------
 
@@ -33,30 +25,30 @@ path_java="/usr/lib/jvm"
 jdk_tar_gz=""
 
 # versões que serão instaladas do JDK
-jdk_64bits='jdk-7u45-linux-x64.tar.gz'
-jdk_32bits='jdk-7u45-linux-i586.tar.gz'
+jdk_64bits='jdk-8u25-linux-x64.tar.gz'
+jdk_32bits='jdk-8u25-linux-i586.tar.gz'
 
 # URL de download dosJDK
-jdk_url_64bits='http://download.oracle.com/otn-pub/java/jdk/7u45-b18/'$jdk_64bits
-jdk_url_32bits='http://download.oracle.com/otn-pub/java/jdk/7u45-b18/'$jdk_32bits
+jdk_url_64bits='http://download.oracle.com/otn-pub/java/jdk/8u25-b17/'$jdk_64bits
+jdk_url_32bits='http://download.oracle.com/otn-pub/java/jdk/8u25-b17/'$jdk_32bits
 
 # Funções
 # ----------------------------------------------------------------------------
 
 # faz o donwload do JDK
 function baixar_jdk(){
-	wget --no-cookies --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com" "$1"
+	wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" "$1"
 }
 
 function validacoes(){
 # verifica se o script foi rodado com sudo
 if [ ! $(id -u) -eq 0 ];then
-		lib_alfred-print_erro "rode o script com sudo"
+		echo "rode o script com sudo"
 		exit 1
 fi
 
 # Verifica a arquitetura do SO e faz o download do tar.gz
-lib_alfred-print_info "baixando JDK"
+echo "baixando JDK"
 if [ $(arch) = 'x86_64' ];then
 	baixar_jdk "$jdk_url_64bits"
 	jdk_tar_gz="$jdk_64bits"
@@ -67,21 +59,21 @@ fi
 
 # verificando se o path já existe
 if [ ! -d $path_java ]; then
-	lib_alfred-print_info "criando diretório java em $path_java"
+	echo "criando diretório java em $path_java"
 	mkdir -p $path_java
 fi
 }
 
 #Informando ao Ubuntu aonde sua instalação do Java está localizada
 function install_location(){
-lib_alfred-print_info "informando onde está sua localização padrão do java"
+echo "informando onde está sua localização padrão do java"
 update-alternatives --install "/usr/bin/javac" "javac" "$path_java/$java/bin/javac" 1
 update-alternatives --install "/usr/bin/java" "java" "$path_java/$java/bin/java" 1
 }
 
 #Informando ao Ubuntu que esse é a sua instalação default de Java
 function install_set_default(){
-lib_alfred-print_info "Informando que essa é sua instalação default do java"
+echo "Informando que essa é sua instalação default do java"
 update-alternatives --set "javac" "$path_java/$java/bin/javac"
 update-alternatives --set "java" "$path_java/$java/bin/java"
 }
@@ -119,4 +111,4 @@ install_location
 install_set_default
 update_profile
 
-lib_alfred-print_success "JDK instalado com sucesso"
+echo "JDK instalado com sucesso"

@@ -15,21 +15,16 @@
 
 # Configurações
 # ----------------------------------------------------------------------------
-
 # set:
 # -e: se encontrar algum erro, termina a execução imediatamente
 set -e
 
-# import da lib_alfred
-if [ -z "$LIB_ALFRED" ];then
-	echo '[ERRO] provalvelmente, a $LIB_ALFRED nao foi instalada'
-	exit 1
-else
-	source "$LIB_ALFRED"
-fi
-
 # Variáveis
 # ----------------------------------------------------------------------------
+# DEBUG = 0, desligado
+# DEBUG = 1, ligado
+DEBUG=0
+
 nome_do_script="$1"
 readme="README.md"
 nome_do_usuario=""
@@ -37,14 +32,8 @@ email_do_usuario=""
 lib='$LIB_ALFRED'
 debug='$DEBUG'
 
-# DEBUG = 0, desligado
-# DEBUG = 1, ligado
-DEBUG=0
-
-
 # Funcoes
 # ----------------------------------------------------------------------------
-
 # funcao de debug
 function debug(){
 	[ "$DEBUG" = 1 ] && echo "[DEBUG] $*"
@@ -53,14 +42,14 @@ function debug(){
 function validacoes(){
 	# se não passar nenhum parametro, dá erro
 	if [ "$nome_do_script" == "" ];then
-		lib_alfred-print_erro "# Uso: ./esqueleto <nome_do_novo_script>"
-		lib_alfred-print_erro "# Ex.: ./esqueleto dummy_script"
+		echo "# Uso: ./esqueleto <nome_do_novo_script>"
+		echo "# Ex.: ./esqueleto dummy_script"
 		exit 1
 	fi
 
 	# verificando se o script já foi criado
 	if [ -d $nome_do_script ]; then
-		lib_alfred-print_erro "Script já existe com esse nome"
+		echo "Script já existe com esse nome"
 		exit 1
 	fi
 
@@ -135,8 +124,7 @@ function exception(){
 
 # funcao main
 function main(){
-	# TODO: trocar essa mensagem
-	lib_alfred-print_success \"Ola, meu nome eh $nome_do_script\"
+	echo \"Ola, meu nome eh $nome_do_script\"
 }
 
 # Main
@@ -152,8 +140,7 @@ main
 
 # função que cria as linhas do README.md
 function criar_readme(){
-	
-echo "$nome_do_script
+	echo "$nome_do_script
 ===========
 
 ## Descrição
@@ -170,15 +157,12 @@ Ex: \`./"$nome_do_script"\`
 
 # versionar o script com o git
 function git_init(){
-
-
 	if [ $(which git > /dev/null; echo $?) == "0" ];then
 		echo "*~" > .gitignore
 		git init > /dev/null
 		git add "$readme" "$nome_do_script" .gitignore
 		git commit -m "criado o esqueleto do $nome_do_script" > /dev/null
 	fi
-
 }
 
 function main(){
@@ -198,12 +182,11 @@ function main(){
 	criar_readme
 	git_init
 
-	lib_alfred-print_success "script "$nome_do_script" criado com sucesso"
+	echo "script "$nome_do_script" criado com sucesso"
 }
 
 # Main
 # ----------------------------------------------------------------------------
-
 validacoes
 main
 

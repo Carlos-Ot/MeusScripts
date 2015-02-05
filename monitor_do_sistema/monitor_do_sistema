@@ -16,14 +16,6 @@
 # -e: se encontrar algum erro, termina a execução imediatamente
 set -e
 
-# import da lib_alfred
-if [ -z "$LIB_ALFRED" ];then
-	echo '[ERRO] provalvelmente, a $LIB_ALFRED nao foi instalada'
-	exit 1
-else
-	source "$LIB_ALFRED"
-fi
-
 # Variáveis
 # ----------------------------------------------------------------------------
 
