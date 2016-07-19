@@ -56,7 +56,7 @@ function validacoes(){
 	if [ $(which git > /dev/null; echo $?) == "0" ];then
 		email_do_usuario="$(cd ~; git config --list | grep "user.email" | cut -d "=" -f2; cd - > /dev/null)"
 		nome_do_usuario="$(cd ~; git config --list | grep "user.name" | cut -d "=" -f2; cd - > /dev/null)"
-	# se não tiver git instalado ,coloque o nome do usuario corrente no script, 
+	# se não tiver git instalado ,coloque o nome do usuario corrente no script,
 	# e coloque um TODO no email
 	else
 		nome_do_usuario=$(whoami)
@@ -66,7 +66,7 @@ function validacoes(){
 
 # Função que cria as linhas do script
 function criar_script(){
-	
+
 echo "#!/bin/bash
 
 # Cabeçalho
@@ -74,7 +74,7 @@ echo "#!/bin/bash
 # TODO: Descrição...
 #
 # Uso:
-# Ex.: 
+# Ex.:
 #
 # Autor: $nome_do_usuario <$email_do_usuario>
 # Desde: $(date +%Y-%m-%d)
@@ -95,8 +95,32 @@ set -e
 # DEBUG = 1, ligado
 DEBUG=0
 
+# Cores
+cor_vermelho=\"\033[31m\"
+cor_verde=\"\033[32m\"
+cor_amarelo=\"\033[33m\"
+fecha_cor=\"\033[m\"
+
 # Funções
 # ----------------------------------------------------------------------------
+
+# **** Utils
+# usada pra imprimir informação
+function print_info(){
+	printf \"\${cor_amarelo}\$1\${fecha_cor}\n\"
+}
+
+# usada pra imprimir mensagem de sucesso
+function print_success(){
+	printf \"\${cor_verde}\$1\${fecha_cor}\n\"
+}
+
+# usada pra imprimir erros
+function print_error(){
+	printf \"\${cor_vermelho}\$1\${fecha_cor}\n\"
+}
+# **** [FIM] Utils
+
 
 # funcao de debug
 function debug(){
@@ -115,7 +139,10 @@ function exception(){
 
 # funcao main
 function main(){
-	echo \"Ola, meu nome eh $nome_do_script\"
+	print_info \"Ola, meu nome eh $nome_do_script\"
+	echo \"\"
+	print_success \"imprimindo mensagem de sucesso!\"
+	print_error \"imprimindo mensagem de erro!\"
 }
 
 # Main
@@ -177,4 +204,3 @@ function main(){
 # ----------------------------------------------------------------------------
 validacoes
 main
-
