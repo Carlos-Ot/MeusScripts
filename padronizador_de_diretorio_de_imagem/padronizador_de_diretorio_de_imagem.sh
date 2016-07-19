@@ -20,14 +20,6 @@
 # -e: se encontrar algum erro, termina a execução imediatamente
 set -e
 
-# import da lib_alfred
-if [ -z "$LIB_ALFRED" ];then
-	echo '[ERRO] provalvelmente, a $LIB_ALFRED nao foi instalada'
-	exit 1
-else
-	source "$LIB_ALFRED"
-fi
-
 # Variáveis
 # ----------------------------------------------------------------------------
 
@@ -35,26 +27,49 @@ funcoeszz_dir=$(echo $ZZPATH | sed 's/\/funcoeszz$//')
 diretorio_de_imagem="$1"
 script_dir=$(pwd)
 
+# Cores
+cor_vermelho=\"\033[31m\"
+cor_verde=\"\033[32m\"
+cor_amarelo=\"\033[33m\"
+fecha_cor=\"\033[m\"
+
 # funções
 # ----------------------------------------------------------------------------
 
-function validacoes(){
+# **** Utils
+# usada pra imprimir informação
+function print_info(){
+	printf "${cor_amarelo}$1${fecha_cor}\n"
+}
 
+# usada pra imprimir mensagem de sucesso
+function print_success(){
+	printf "${cor_verde}$1${fecha_cor}\n"
+}
+
+# usada pra imprimir erros
+function print_error(){
+	printf "${cor_vermelho}$1${fecha_cor}\n"
+}
+# **** [FIM] Utils
+
+
+function validacoes(){
 	# validação para saber se as funcoeszz estão instaladas
 	if [ -z "$ZZPATH" ];then
-		lib_alfred-print_erro "seu '$ZZPATH' está vazio. Provavelmente você não instalou as funcoeszz"
+		print_error "seu '$ZZPATH' está vazio. Provavelmente você não instalou as funcoeszz"
 		exit 1
 	fi
 
 	# checando se o parametro foi passado
 	if [ "$diretorio_de_imagem" = "" ];then
-		lib_alfred-print_erro "Uso: padronizador_de_diretorio_de_imagem <diretorio_de_imagem>"
+		print_error "Uso: padronizador_de_diretorio_de_imagem <diretorio_de_imagem>"
 		exit 1
 	fi
 
 	# verificando se o diretorio de imagem existe
 	if [ ! -e "$diretorio_de_imagem" ];then
-		lib_alfred-print_erro "diretorio nao existe"
+		print_error "diretorio nao existe"
 		exit 1
 	fi
 }
@@ -68,24 +83,22 @@ function validacoes(){
 # Dessa maneira, a extensão não é "comida" pelas zz, e quando a zznomefoto executar, vai ficar certinho, assim:
 # 'foto-001.jpg'. ;)
 function retirar_ponto_1(){
-
-	for arquivo_ponto_1 in $(find "$diretorio_de_imagem" -type "f" -iname "*.1"); 
-	do 
+	for arquivo_ponto_1 in $(find "$diretorio_de_imagem" -type "f" -iname "*.1");
+	do
 		path=$(echo $arquivo_ponto_1 | sed 's/\(.*\/\).*$/\1/');
-		nome_novo=$(echo $arquivo_ponto_1 | sed 's/.*\/\(.*$\)/\1/;s/\./.1./1;s/.1$//g'); 
-		mv -v $arquivo_ponto_1 "$path$nome_novo" 
+		nome_novo=$(echo $arquivo_ponto_1 | sed 's/.*\/\(.*$\)/\1/;s/\./.1./1;s/.1$//g');
+		mv -v $arquivo_ponto_1 "$path$nome_novo"
 	done
 
 }
 
 # padronizando todos os diretorios com o zzarrumanome
 # OBS: Teoricamente, não precisa do parametro '-r'
-# para a azzarrumanome, pois nesse caso, eu só quero 
+# para a azzarrumanome, pois nesse caso, eu só quero
 # renomear os diretorio. Mas se eu não fizer isso,
 # eu precisarei rodar a 'zzminusculas' e o loop se bobear
 # ficaria até maior. Com o '-r' ele roda a 'zzminusculas' por baixo.
 function padroniza_nome(){
-
 	cd $funcoeszz_dir
 	./funcoeszz zzarrumanome -d -r "$diretorio_de_imagem"*
 	cd "$script_dir"
@@ -93,7 +106,6 @@ function padroniza_nome(){
 
 # renomeando todos os arquivos
 function renomea_todos_os_arquivos(){
-
 	cd $funcoeszz_dir
 	for diretorio in "$diretorio_de_imagem"*;
 	do
