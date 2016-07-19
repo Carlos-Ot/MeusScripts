@@ -29,7 +29,6 @@ nome_do_script="$1"
 readme="README.md"
 nome_do_usuario=""
 email_do_usuario=""
-lib='$LIB_ALFRED'
 debug='$DEBUG'
 
 # Funcoes
@@ -136,9 +135,6 @@ function criar_readme(){
 ===========
 
 ## Descrição
-
-## Dependências
-* [**lib_alfred**](https://github.com/frankjuniorr/lib_alfred)
 
 ## Uso
 Uso: \`./"$nome_do_script"\`
