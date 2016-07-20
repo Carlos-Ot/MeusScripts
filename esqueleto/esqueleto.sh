@@ -3,7 +3,9 @@
 # Cabeçalho
 # ----------------------------------------------------------------------------
 # Esqueleto de Script.
-# Script feito para gerar uma especie de casca de script, facilitando na hora da criação de um script novo
+# Script feito para gerar uma especie de casca de script,
+# facilitando na hora da criação de um script novo.
+# E eu não podia deixar de fazer uma referencia ao Esqueleto do He-man =)
 #
 # Uso: ./esqueleto <nome_do_novo_script>
 # Ex.: ./esqueleto dummy_script
@@ -33,7 +35,7 @@ email_do_usuario=""
 # Funcoes
 # ----------------------------------------------------------------------------
 # funcao de debug
-function debug(){
+function debug_log(){
 	[ "$debug" = 1 ] && echo "[DEBUG] $*"
 }
 
@@ -120,7 +122,7 @@ function print_error(){
 }
 
 # funcao de debug
-function debug(){
+function debug_log(){
 	[ \"\$debug\" = 1 ] && print_info \"[DEBUG] \$*\"
 }
 # **** [FIM] Utils
