@@ -21,21 +21,20 @@ set -e
 
 # Variáveis
 # ----------------------------------------------------------------------------
-# DEBUG = 0, desligado
-# DEBUG = 1, ligado
-DEBUG=0
+# debug = 0, desligado
+# debug = 1, ligado
+debug=0
 
-nome_do_script="$1"
+nome_do_script="$1.sh"
 readme="README.md"
 nome_do_usuario=""
 email_do_usuario=""
-debug='$DEBUG'
 
 # Funcoes
 # ----------------------------------------------------------------------------
 # funcao de debug
 function debug(){
-	[ "$DEBUG" = 1 ] && echo "[DEBUG] $*"
+	[ "$debug" = 1 ] && echo "[DEBUG] $*"
 }
 
 function validacoes(){
@@ -91,9 +90,9 @@ set -e
 # Variáveis
 # ----------------------------------------------------------------------------
 
-# DEBUG = 0, desligado
-# DEBUG = 1, ligado
-DEBUG=0
+# debug = 0, desligado
+# debug = 1, ligado
+debug=0
 
 # Cores
 cor_vermelho=\"\033[31m\"
@@ -119,13 +118,13 @@ function print_success(){
 function print_error(){
 	printf \"\${cor_vermelho}\$1\${fecha_cor}\n\"
 }
-# **** [FIM] Utils
-
 
 # funcao de debug
 function debug(){
-	[ \"$debug\" = 1 ] && echo \"[DEBUG] \$*\"
+	[ \"\$debug\" = 1 ] && print_info \"[DEBUG] \$*\"
 }
+# **** [FIM] Utils
+
 
 # tratamento de validacoes
 function validacoes(){
@@ -181,11 +180,12 @@ function git_init(){
 }
 
 function main(){
+	local nome_do_diretorio=$(echo "$nome_do_script" | sed 's/\.sh//g')
 	# criando o diretorio do script
-	mkdir "$nome_do_script"
+	mkdir "$nome_do_diretorio"
 
 	# entrando no diretorio do script
-	cd "$nome_do_script"
+	cd "$nome_do_diretorio"
 
 	# criando um arquivo em branco com o nome do script
 	touch "$nome_do_script"
