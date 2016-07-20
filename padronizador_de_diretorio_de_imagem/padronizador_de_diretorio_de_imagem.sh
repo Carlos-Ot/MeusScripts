@@ -27,11 +27,15 @@ funcoeszz_dir=$(echo $ZZPATH | sed 's/\/funcoeszz$//')
 diretorio_de_imagem="$1"
 script_dir=$(pwd)
 
+# debug = 0, desligado
+# debug = 1, ligado
+debug=0
+
 # Cores
-cor_vermelho=\"\033[31m\"
-cor_verde=\"\033[32m\"
-cor_amarelo=\"\033[33m\"
-fecha_cor=\"\033[m\"
+cor_vermelho="\033[31m"
+cor_verde="\033[32m"
+cor_amarelo="\033[33m"
+fecha_cor="\033[m"
 
 # funções
 # ----------------------------------------------------------------------------
@@ -51,13 +55,18 @@ function print_success(){
 function print_error(){
 	printf "${cor_vermelho}$1${fecha_cor}\n"
 }
+
+# funcao de debug
+function debug_log(){
+	[ "$debug" = 1 ] && print_info "[DEBUG] $*"
+}
 # **** [FIM] Utils
 
 
 function validacoes(){
 	# validação para saber se as funcoeszz estão instaladas
 	if [ -z "$ZZPATH" ];then
-		print_error "seu '$ZZPATH' está vazio. Provavelmente você não instalou as funcoeszz"
+		print_error "Provavelmente você não instalou as funcoeszz - esse script depende dela =("
 		exit 1
 	fi
 
@@ -92,6 +101,18 @@ function retirar_ponto_1(){
 
 }
 
+# funcao para renomear também o diretório de imagem,
+# substituindo os espaços em branco por underline.
+# Se não fizer, o script quebra.
+function padroniza_nome_diretorio(){
+	local nome_novo=""
+	if [ $(echo "$diretorio_de_imagem" | grep " " | wc -l) == "1" ];then
+		nome_novo=$(echo "$diretorio_de_imagem" | tr ' ' '_')
+		mv "$diretorio_de_imagem" "$nome_novo"
+		diretorio_de_imagem="$nome_novo"
+	fi
+}
+
 # padronizando todos os diretorios com o zzarrumanome
 # OBS: Teoricamente, não precisa do parametro '-r'
 # para a azzarrumanome, pois nesse caso, eu só quero
@@ -99,6 +120,7 @@ function retirar_ponto_1(){
 # eu precisarei rodar a 'zzminusculas' e o loop se bobear
 # ficaria até maior. Com o '-r' ele roda a 'zzminusculas' por baixo.
 function padroniza_nome(){
+	print_info '##### Colocando todo mundo pra nome minusculo'
 	cd $funcoeszz_dir
 	./funcoeszz zzarrumanome -d -r "$diretorio_de_imagem"*
 	cd "$script_dir"
@@ -106,6 +128,7 @@ function padroniza_nome(){
 
 # renomeando todos os arquivos
 function renomea_todos_os_arquivos(){
+	print_info '##### Padronizando todo os arquivos'
 	cd $funcoeszz_dir
 	for diretorio in "$diretorio_de_imagem"*;
 	do
@@ -126,6 +149,7 @@ function renomea_todos_os_arquivos(){
 
 validacoes
 
+padroniza_nome_diretorio
 padroniza_nome
 retirar_ponto_1
 renomea_todos_os_arquivos
