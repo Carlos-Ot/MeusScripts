@@ -25,7 +25,7 @@
 	# ----------------------------------------------------------------------------
 	# Autor: Frank Junior <frankcbjunior@gmail.com>
 	# Desde: 2013-12-24
-	# Versão: 2
+	# Versão: 3
 	# ----------------------------------------------------------------------------
 
 
@@ -42,6 +42,8 @@
 	readme="README.md"
 	nome_do_usuario=""
 	email_do_usuario=""
+	nome_do_script=""
+	nome_do_parser="parser.sh"
 
 	mensagem_help="
 Uso: $(basename "$0") [OPÇÕES] <NOME_DO_SCRIPT>
@@ -57,6 +59,9 @@ Ex.: ./esqueleto -h
 Ex.: ./esqueleto dummy_script
 Ex.: ./esqueleto -g dummy_script
 	"
+
+
+
 
 	# Utils
 	# ****************************************************************************
@@ -143,6 +148,7 @@ Ex.: ./esqueleto -g dummy_script
 
 
 
+
 	# Funções do Script
 	# ----------------------------------------------------------------------------
 	# ============================================
@@ -156,9 +162,10 @@ Ex.: ./esqueleto -g dummy_script
 	# Descrição:
 	#		TODO...
 	#
+	# ----------------------------------------------------------------------------
 	# Uso:
 	#		TODO..
-	#
+	# ----------------------------------------------------------------------------
 	# Autor: $nome_do_usuario <$email_do_usuario>
 	# Desde: $(date +%d-%m-%Y)
 	# Versão: 1
@@ -174,8 +181,10 @@ Ex.: ./esqueleto -g dummy_script
 
 	# Variáveis
 	# ----------------------------------------------------------------------------
-
 	# as variaveis ficam aqui...
+
+
+
 
 	# Utils
 	# ****************************************************************************
@@ -235,6 +244,7 @@ Ex.: ./esqueleto -g dummy_script
 
 
 
+
 	# Funções do Script
 	# ----------------------------------------------------------------------------
 	# ============================================
@@ -258,6 +268,177 @@ Ex.: ./esqueleto -g dummy_script
 	# FIM do Script =D
 
 	" > "$nome_do_script"
+	}
+
+	# ============================================
+	# função que cria o parser.sh
+	# ============================================
+	function criar_parser(){
+	echo "#!/bin/bash
+
+	# Cabeçalho
+	# ----------------------------------------------------------------------------
+	# Descrição:
+	# 	Parser para ler arquivos de configuração retornando somente as flags
+	#
+	# ----------------------------------------------------------------------------
+	# Uso:
+	# 	parser.sh <file.config>
+	# 	Ex.: ./parser.sh release.config
+	# ----------------------------------------------------------------------------
+	# Autor: $nome_do_usuario <$email_do_usuario>
+	# Desde: $(date +%d-%m-%Y)
+	# Versão: 1
+	# ----------------------------------------------------------------------------
+
+
+
+
+	# Configurações
+	# ----------------------------------------------------------------------------
+	# set:
+	# -e: se encontrar algum erro, termina a execução imediatamente
+	set -e
+
+
+	# Variáveis
+	# ----------------------------------------------------------------------------
+	# O arquivo de configuração é indicado na linha de comando
+	CONFIG=\$1
+
+	chave=""
+	valor=""
+	retorno=""
+
+
+
+
+	# Utils
+	# ****************************************************************************
+
+	# debug = 0, desligado
+	# debug = 1, ligado
+	debug=0
+
+	# Cores
+	cor_vermelho=\"\033[31m\"
+	cor_verde=\"\033[32m\"
+	cor_amarelo=\"\033[33m\"
+	fecha_cor=\"\033[m\"
+
+	# ============================================
+	# Função pra imprimir informação
+	# ============================================
+	function print_info(){
+		printf \"\${cor_amarelo}\$1\${fecha_cor}\n\"
+	}
+
+	# ============================================
+	# Função pra imprimir mensagem de sucesso
+	# ============================================
+	function print_success(){
+		printf \"\${cor_verde}\$1\${fecha_cor}\n\"
+	}
+
+	# ============================================
+	# Função pra imprimir erros
+	# ============================================
+	function print_error(){
+		printf \"\${cor_vermelho}[ERROR] \$1\${fecha_cor}\n\"
+	}
+
+	# ============================================
+	# Função de debug
+	# ============================================
+	function debug_log(){
+		[ \"\$debug\" = 1 ] && print_info \"[DEBUG] \$*\"
+	}
+
+	# ============================================
+	# tratamento de validacoes
+	# ============================================
+	function validacoes(){
+		# O arquivo deve existir e ser legível
+		if [ -z \"\$CONFIG\" ]; then
+	    print_error \"uso: parser arquivo.config\"
+			exit 1
+		elif [ ! -r \"\$CONFIG\" ]; then
+	    print_error \"Não consigo ler o arquivo \$CONFIG\"
+			exit 1
+		fi
+	}
+
+	# ============================================
+	# tratamento das exceções de interrupções
+	# ============================================
+	function exception(){
+		echo \"\"
+	}
+	# ******************* [FIM] Utils *******************
+
+
+
+
+	# Funções do Script
+	# ----------------------------------------------------------------------------
+	# ============================================
+	# função com o loop para extrai dados
+	# de arquivos de configuração
+	# ============================================
+	function main(){
+		# Loop para ler a linha de configuração, guardando em $LINHA
+		while read LINHA; do
+
+			# Ignorando as linhas de comentário
+			[ \"\$(echo \$LINHA | cut -c1)\" = '#' ] && continue
+
+			# Ignorando linhas em branco
+			[ \"\$LINHA\" ] || continue
+
+			# Guardando cada palavra da linha em $1, $2, $3...
+			set - \$LINHA
+
+			# Extraindo os dados (chaves sempre maiusculas)
+			chave=$('echo' \$1 | tr a-z A-Z)
+			shift
+			valor=\$*
+
+			# capturando cada linha do arquivo (chave e valor) e atribuindo a variavel \$retorno
+			# o sed esta retirando os comentários de 1 linha
+			print_success \"\$retorno\$chave=\\\"\$valor\\\"\" | sed 's/\ #.*/\"/g'
+
+		done < \"\$CONFIG\"
+	}
+
+	# Main
+	# ----------------------------------------------------------------------------
+	# trata interrrupção do script em casos de ctrl + c (SIGINT) e kill (SIGTERM)
+	trap exception SIGINT SIGTERM
+	validacoes
+	main
+
+	" > "$nome_do_parser"
+
+	}
+
+	# ============================================
+	# função que cria o arquivo de configuração pro parser.sh
+	# ============================================
+	function criar_arquivo_configuracao(){
+		local nome_arquivo_config="arquivo.config"
+
+		echo "
+# Cabeçalho
+# ----------------------------------------------------------------------------
+# Descrição:
+#   arquivo.config - arquivo de configuração
+# ----------------------------------------------------------------------------
+
+# TODO: Descrição da chave
+# TODO: exemplo:
+CHAVE      valor
+
+		" > "$nome_arquivo_config"
 	}
 
 	# ============================================
@@ -304,6 +485,18 @@ Ex.: ./esqueleto -g dummy_script
 
 		# dando permissão de execução pro script
 		chmod +x "$nome_do_script"
+
+		criar_script
+	}
+
+	# ============================================
+	# Função para criar o arquivo de parser
+	# ============================================
+	function init_parser(){
+		touch "$nome_do_parser"
+		chmod +x "$nome_do_parser"
+		criar_parser
+		criar_arquivo_configuracao
 	}
 
 	# ============================================
@@ -328,10 +521,15 @@ Ex.: ./esqueleto -g dummy_script
 					nome_do_script="$1.sh"
 					validacoes "$nome_do_script"
 					init
-					criar_script
 					criar_readme
 					git_init
 					print_success "script $nome_do_script criado com sucesso"
+					exit 0
+				;;
+
+				# Criando o parser
+				-p | --parser)
+					init_parser
 					exit 0
 				;;
 
@@ -340,7 +538,6 @@ Ex.: ./esqueleto -g dummy_script
 					nome_do_script="$1.sh"
 					validacoes "$nome_do_script"
 					init
-					criar_script
 					print_success "script $nome_do_script criado com sucesso"
 					exit 0
 				;;
