@@ -14,7 +14,7 @@
 	#
 	#		OPÇÕES: - opcionais
 	# 	-h, --help	Mostra essa mesma tela de ajuda
-	#		-g, --git		Versiona o scrit com git
+	#		-g, --git		Versiona o script com git
 	#		-p, --parser		Cria um parser com um arquivo de configuração
 	#
 	#		NOME_DO_SCRIPT - obrigatório
@@ -52,7 +52,7 @@ Uso: $(basename "$0") [OPÇÕES] <NOME_DO_SCRIPT>
 
 OPÇÕES: - opcionais
   -h, --help  Mostra essa mesma tela de ajuda
-  -g, --git   Versiona o scrit com git
+  -g, --git   Versiona o script com git
   -p, --parser   Cria um parser com um arquivo de configuração
 
 NOME_DO_SCRIPT - obrigatório
