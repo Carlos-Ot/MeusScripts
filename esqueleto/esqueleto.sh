@@ -15,11 +15,13 @@
 	#		OPÇÕES: - opcionais
 	# 	-h, --help	Mostra essa mesma tela de ajuda
 	#		-g, --git		Versiona o scrit com git
+	#		-p, --parser		Cria um parser com um arquivo de configuração
 	#
 	#		NOME_DO_SCRIPT - obrigatório
 	#		- Nome do script a ser criado
 	#
 	#		Ex.: ./esqueleto -h
+	# 	Ex.: ./esqueleto -p
 	# 	Ex.: ./esqueleto dummy_script
 	# 	Ex.: ./esqueleto -g dummy_script
 	# ----------------------------------------------------------------------------
@@ -51,13 +53,68 @@ Uso: $(basename "$0") [OPÇÕES] <NOME_DO_SCRIPT>
 OPÇÕES: - opcionais
   -h, --help  Mostra essa mesma tela de ajuda
   -g, --git   Versiona o scrit com git
+  -p, --parser   Cria um parser com um arquivo de configuração
 
 NOME_DO_SCRIPT - obrigatório
   - Nome do script a ser criado
 
 Ex.: ./esqueleto -h
+Ex.: ./esqueleto -p
 Ex.: ./esqueleto dummy_script
 Ex.: ./esqueleto -g dummy_script
+	"
+	mensagem_parser="
+Agora que o parser foi criado, recomendo que você adicione
+essas funções no seu script para usar o parser e o arquivo de configuração:
+
+# ============================================
+# função que carrega os dados do arquivo
+# de configuração.
+# ============================================
+function init(){
+	# Carregando a configuração do arquivo externo
+	local chaves=\"\$(./\"\$parser_file\" \"\$config_file\")\"
+
+	# consultando a chave
+	chave=\$(retorna_valor \"\$chaves\" \"chave\")
+
+	validacao_valores
+}
+
+# ============================================
+# função para validar os valores retornados
+# pelo arquivo de configuração
+# ============================================
+function validacao_valores(){
+	# valide as chaves aqui
+}
+
+# ============================================
+# funcão para pegar o valor da chave procurada
+#
+# Parametro 1 [\$1] = A lista de chaves do \$config_file.
+# Parametro 2 [\$2] = A chave no qual deseja pegar o valor.
+# ============================================
+function retorna_valor(){
+	local chaves=\$1
+	local chave=\$2
+	local linha=""
+	local valor=""
+
+	# filtrando a saída pela chave que foi passada por parametro
+	linha=\$(echo -e \"\$chaves\" | grep -i \"\$chave\")
+
+	# validação, para chave duplicada
+	if [ \$(echo -e \"\$linha\" | wc -l) -gt 1 ]; then
+		print_erro \"chave \$chave duplicada, no arquivo de configuração\"
+		exit 1
+	fi
+
+	# pegando a somente o valor da chave, e imprimindo na saída padrão
+	valor=\$(echo \"\$linha\" | cut -d \"=\" -f2 | sed 's/\\\\\"//g')
+
+	echo \"\$valor\"
+}
 	"
 
 
@@ -65,6 +122,10 @@ Ex.: ./esqueleto -g dummy_script
 
 	# Utils
 	# ****************************************************************************
+
+	# códigos de retorno
+	SUCESSO=0
+	ERRO=1
 
 	# debug = 0, desligado
 	# debug = 1, ligado
@@ -115,13 +176,13 @@ Ex.: ./esqueleto -g dummy_script
 		if [ "$script" == "" ];then
 			print_error "# Uso: ./esqueleto <nome_do_novo_script>"
 			print_error "# Ex.: ./esqueleto dummy_script"
-			exit 1
+			exit "$ERRO"
 		fi
 
 		# verificando se o script já foi criado
 		if [ -d "$script" ]; then
 			print_error "Script já existe com esse nome"
-			exit 1
+			exit "$ERRO"
 		fi
 
 		# pegando as configurações do git para preencher o cabeçalho.
@@ -142,7 +203,7 @@ Ex.: ./esqueleto -g dummy_script
 	# ============================================
 	function exception(){
 		print_error "Alguem me matou com um um 'kill -9'"
-		exit 1
+		exit "$ERRO"
 	}
 	# ******************* [FIM] Utils *******************
 
@@ -188,6 +249,10 @@ Ex.: ./esqueleto -g dummy_script
 
 	# Utils
 	# ****************************************************************************
+
+	# códigos de retorno
+	SUCESSO=0
+	ERRO=1
 
 	# debug = 0, desligado
 	# debug = 1, ligado
@@ -255,6 +320,7 @@ Ex.: ./esqueleto -g dummy_script
 		echo \"\"
 		print_success \"imprimindo mensagem de sucesso!\"
 		print_error \"imprimindo mensagem de erro!\"
+		exit \"\$SUCESSO\"
 	}
 
 	# Main
@@ -512,7 +578,7 @@ CHAVE      valor
 				# mensagem de help
 				-h | --help)
 					print_info "$mensagem_help"
-					exit 0
+					exit "$SUCESSO"
 				;;
 
 				# Criando e versionando o script com git
@@ -524,13 +590,15 @@ CHAVE      valor
 					criar_readme
 					git_init
 					print_success "script $nome_do_script criado com sucesso"
-					exit 0
+					exit "$SUCESSO"
 				;;
 
 				# Criando o parser
 				-p | --parser)
 					init_parser
-					exit 0
+					print_success "parser criado com sucesso"
+					print_info "$mensagem_parser"
+					exit "$SUCESSO"
 				;;
 
 				# se passar só o nome do script como parametro, ele cria sem git
@@ -539,7 +607,7 @@ CHAVE      valor
 					validacoes "$nome_do_script"
 					init
 					print_success "script $nome_do_script criado com sucesso"
-					exit 0
+					exit "$SUCESSO"
 				;;
 
 			esac
@@ -559,7 +627,7 @@ CHAVE      valor
 	if [ -z "$1" ]
   then
 		print_info "$mensagem_help"
-		exit 0
+		exit "$SUCESSO"
 	else
 		main "$1" "$2"
 	fi
