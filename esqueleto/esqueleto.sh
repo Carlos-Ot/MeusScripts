@@ -452,7 +452,7 @@ function retorna_valor(){
   # de arquivos de configuração
   # ============================================
   function main(){
-    # Loop para ler a linha de configuração, guardando em $LINHA
+    # Loop para ler a linha de configuração, guardando em \$LINHA
     while read LINHA; do
 
       # Ignorando as linhas de comentário
@@ -461,7 +461,7 @@ function retorna_valor(){
       # Ignorando linhas em branco
       [ \"\$LINHA\" ] || continue
 
-      # Guardando cada palavra da linha em $1, $2, $3...
+      # Guardando cada palavra da linha em \$1, \$2, \$3...
       set - \$LINHA
 
       # Extraindo os dados (chaves sempre maiusculas)
