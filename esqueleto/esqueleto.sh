@@ -27,7 +27,7 @@
   # ----------------------------------------------------------------------------
   # Autor: Frank Junior <frankcbjunior@gmail.com>
   # Desde: 2013-12-24
-  # Versão: 3
+  # Versão: 4
   # ----------------------------------------------------------------------------
 
 
@@ -41,11 +41,10 @@
   # Variáveis
   # ----------------------------------------------------------------------------
 
-  readme="README.md"
   nome_do_usuario=""
   email_do_usuario=""
   nome_do_script=""
-  nome_do_parser="parser.sh"
+  esqueleto_path=$(dirname "$0")
 
   mensagem_help="
 Uso: $(basename "$0") [OPÇÕES] <NOME_DO_SCRIPT>
@@ -185,17 +184,6 @@ function retorna_valor(){
       exit "$ERRO"
     fi
 
-    # pegando as configurações do git para preencher o cabeçalho.
-    if [ $(which git > /dev/null; echo $?) == "0" ];then
-      email_do_usuario="$(cd ~; git config --list | grep "user.email" | cut -d "=" -f2; cd - > /dev/null)"
-      nome_do_usuario="$(cd ~; git config --list | grep "user.name" | cut -d "=" -f2; cd - > /dev/null)"
-    # se não tiver git instalado ,coloque o nome do usuario corrente no script,
-    # e coloque um TODO no email
-    else
-      nome_do_usuario=$(whoami)
-      email_do_usuario="TODO: email@email.com"
-    fi
-
   }
 
   # ============================================
@@ -213,314 +201,39 @@ function retorna_valor(){
   # Funções do Script
   # ----------------------------------------------------------------------------
   # ============================================
-  # Função que constrói o script
+  # função que pega o nome do autor e o email
+  # através das configurações do git.
   # ============================================
-  function criar_script(){
-  echo "#!/bin/bash
-
-  # Cabeçalho
-  # ----------------------------------------------------------------------------
-  # Descrição:
-  #    TODO...
-  #
-  # ----------------------------------------------------------------------------
-  # Uso:
-  #    TODO..
-  # ----------------------------------------------------------------------------
-  # Autor: $nome_do_usuario <$email_do_usuario>
-  # Desde: $(date +%d-%m-%Y)
-  # Versão: 1
-  # ----------------------------------------------------------------------------
-
-
-  # Configurações
-  # ----------------------------------------------------------------------------
-  # set:
-  # -e: se encontrar algum erro, termina a execução imediatamente
-  set -e
-
-
-  # Variáveis
-  # ----------------------------------------------------------------------------
-  # as variaveis ficam aqui...
-
-
-
-
-  # Utils
-  # ****************************************************************************
-
-  # códigos de retorno
-  SUCESSO=0
-  ERRO=1
-
-  # debug = 0, desligado
-  # debug = 1, ligado
-  debug=0
-
-  # Cores
-  cor_vermelho=\"\033[31m\"
-  cor_verde=\"\033[32m\"
-  cor_amarelo=\"\033[33m\"
-  fecha_cor=\"\033[m\"
-
-  # ============================================
-  # Função pra imprimir informação
-  # ============================================
-  function print_info(){
-    printf \"\${cor_amarelo}\$1\${fecha_cor}\n\"
-  }
-
-  # ============================================
-  # Função pra imprimir mensagem de sucesso
-  # ============================================
-  function print_success(){
-    printf \"\${cor_verde}\$1\${fecha_cor}\n\"
-  }
-
-  # ============================================
-  # Função pra imprimir erros
-  # ============================================
-  function print_error(){
-    printf \"\${cor_vermelho}[ERROR] \$1\${fecha_cor}\n\"
-  }
-
-  # ============================================
-  # Função de debug
-  # ============================================
-  function debug_log(){
-    [ \"\$debug\" = 1 ] && print_info \"[DEBUG] \$*\"
-  }
-
-  # ============================================
-  # tratamento de validacoes
-  # ============================================
-  function validacoes(){
-    echo \"\"
-  }
-
-  # ============================================
-  # tratamento das exceções de interrupções
-  # ============================================
-  function exception(){
-    echo \"\"
-  }
-  # ******************* [FIM] Utils *******************
-
-
-
-
-  # Funções do Script
-  # ----------------------------------------------------------------------------
-  # ============================================
-  # Função Main
-  # ============================================
-  function main(){
-    print_info \"Ola, meu nome eh $nome_do_script\"
-    echo \"\"
-    print_success \"imprimindo mensagem de sucesso!\"
-    print_error \"imprimindo mensagem de erro!\"
-    exit \"\$SUCESSO\"
-  }
-
-  # Main
-  # ----------------------------------------------------------------------------
-  # trata interrrupção do script em casos de ctrl + c (SIGINT) e kill (SIGTERM)
-  trap exception SIGINT SIGTERM
-  validacoes
-  main
-
-  # ----------------------------------------------------------------------------
-  # FIM do Script =D
-
-  " > "$nome_do_script"
-  }
-
-  # ============================================
-  # função que cria o parser.sh
-  # ============================================
-  function criar_parser(){
-  echo "#!/bin/bash
-
-  # Cabeçalho
-  # ----------------------------------------------------------------------------
-  # Descrição:
-  #   Parser para ler arquivos de configuração retornando somente as flags
-  #
-  # ----------------------------------------------------------------------------
-  # Uso:
-  #   parser.sh <file.config>
-  #   Ex.: ./parser.sh release.config
-  # ----------------------------------------------------------------------------
-  # Autor: $nome_do_usuario <$email_do_usuario>
-  # Desde: $(date +%d-%m-%Y)
-  # Versão: 1
-  # ----------------------------------------------------------------------------
-
-
-
-
-  # Configurações
-  # ----------------------------------------------------------------------------
-  # set:
-  # -e: se encontrar algum erro, termina a execução imediatamente
-  set -e
-
-
-  # Variáveis
-  # ----------------------------------------------------------------------------
-  # O arquivo de configuração é indicado na linha de comando
-  CONFIG=\$1
-
-  chave=""
-  valor=""
-  retorno=""
-
-
-
-
-  # Utils
-  # ****************************************************************************
-
-  # debug = 0, desligado
-  # debug = 1, ligado
-  debug=0
-
-  # Cores
-  cor_vermelho=\"\033[31m\"
-  cor_verde=\"\033[32m\"
-  cor_amarelo=\"\033[33m\"
-  fecha_cor=\"\033[m\"
-
-  # ============================================
-  # Função pra imprimir informação
-  # ============================================
-  function print_info(){
-    printf \"\${cor_amarelo}\$1\${fecha_cor}\n\"
-  }
-
-  # ============================================
-  # Função pra imprimir mensagem de sucesso
-  # ============================================
-  function print_success(){
-    printf \"\${cor_verde}\$1\${fecha_cor}\n\"
-  }
-
-  # ============================================
-  # Função pra imprimir erros
-  # ============================================
-  function print_error(){
-    printf \"\${cor_vermelho}[ERROR] \$1\${fecha_cor}\n\"
-  }
-
-  # ============================================
-  # Função de debug
-  # ============================================
-  function debug_log(){
-    [ \"\$debug\" = 1 ] && print_info \"[DEBUG] \$*\"
-  }
-
-  # ============================================
-  # tratamento de validacoes
-  # ============================================
-  function validacoes(){
-    # O arquivo deve existir e ser legível
-    if [ -z \"\$CONFIG\" ]; then
-      print_error \"uso: parser arquivo.config\"
-      exit 1
-    elif [ ! -r \"\$CONFIG\" ]; then
-      print_error \"Não consigo ler o arquivo \$CONFIG\"
-      exit 1
+  function pegar_autor_email_pelo_git(){
+    # pegando as configurações do git para preencher o cabeçalho.
+    if [ $(which git > /dev/null; echo $?) == "0" ];then
+      email_do_usuario="$(cd ~; git config --list | grep "user.email" | cut -d "=" -f2; cd - > /dev/null)"
+      nome_do_usuario="$(cd ~; git config --list | grep "user.name" | cut -d "=" -f2; cd - > /dev/null)"
+    # se não tiver git instalado ,coloque o nome do usuario corrente no script,
+    # e coloque um TODO no email
+    else
+      nome_do_usuario=$(whoami)
+      email_do_usuario="TODO: email@email.com"
     fi
-  }
-
-  # ============================================
-  # tratamento das exceções de interrupções
-  # ============================================
-  function exception(){
-    echo \"\"
-  }
-  # ******************* [FIM] Utils *******************
-
-
-
-
-  # Funções do Script
-  # ----------------------------------------------------------------------------
-  # ============================================
-  # função com o loop para extrai dados
-  # de arquivos de configuração
-  # ============================================
-  function main(){
-    # Loop para ler a linha de configuração, guardando em \$LINHA
-    while read LINHA; do
-
-      # Ignorando as linhas de comentário
-      [ \"\$(echo \$LINHA | cut -c1)\" = '#' ] && continue
-
-      # Ignorando linhas em branco
-      [ \"\$LINHA\" ] || continue
-
-      # Guardando cada palavra da linha em \$1, \$2, \$3...
-      set - \$LINHA
-
-      # Extraindo os dados (chaves sempre maiusculas)
-      chave=$('echo' \$1 | tr a-z A-Z)
-      shift
-      valor=\$*
-
-      # capturando cada linha do arquivo (chave e valor) e atribuindo a variavel \$retorno
-      # o sed esta retirando os comentários de 1 linha
-      print_success \"\$retorno\$chave=\\\"\$valor\\\"\" | sed 's/\ #.*/\"/g'
-
-    done < \"\$CONFIG\"
-  }
-
-  # Main
-  # ----------------------------------------------------------------------------
-  # trata interrrupção do script em casos de ctrl + c (SIGINT) e kill (SIGTERM)
-  trap exception SIGINT SIGTERM
-  validacoes
-  main
-
-  " > "$nome_do_parser"
-
-  }
-
-  # ============================================
-  # função que cria o arquivo de configuração pro parser.sh
-  # ============================================
-  function criar_arquivo_configuracao(){
-    local nome_arquivo_config="arquivo.config"
-
-    echo "
-# Cabeçalho
-# ----------------------------------------------------------------------------
-# Descrição:
-#   arquivo.config - arquivo de configuração
-# ----------------------------------------------------------------------------
-
-# TODO: Descrição da chave
-# TODO: exemplo:
-CHAVE      valor
-
-    " > "$nome_arquivo_config"
   }
 
   # ============================================
   # função que cria o README.md
   # ============================================
   function criar_readme(){
-    echo "$nome_do_script
-  ===========
 
-  ## Descrição
+  local readme='/modelos/README.md'
 
-  ## Uso
-  Uso: \`./"$nome_do_script"\`
+  # voltando pra pasta do script
+  cd ..
 
-  Ex: \`./"$nome_do_script"\`
-  " > "$readme"
+  # copiando o readme modelo
+  cp ${esqueleto_path}${readme} "$nome_do_diretorio"
+
+  cd "$nome_do_diretorio"
+
+  sed -i "s/%nomeDoScript%/$nome_do_script/g" README.md
+
   }
 
   # ============================================
@@ -530,7 +243,7 @@ CHAVE      valor
     if [ $(which git > /dev/null; echo $?) == "0" ];then
       echo "*~" > .gitignore
       git init > /dev/null
-      git add "$readme" "$nome_do_script" .gitignore
+      git add README.md "$nome_do_script" .gitignore
       git commit -m "criado o esqueleto do $nome_do_script" > /dev/null
     fi
   }
@@ -539,30 +252,44 @@ CHAVE      valor
   # Função para criar o arquivo de script
   # ============================================
   function init(){
-    local nome_do_diretorio=$(echo "$nome_do_script" | sed 's/\.sh//g')
-    # criando o diretorio do script
-    mkdir "$nome_do_diretorio"
+    nome_do_diretorio=$(echo "$nome_do_script" | sed 's/\.sh//g')
+    local script='/modelos/script.sh'
+    local data=$(date +%d-%m-%Y)
 
-    # entrando no diretorio do script
+    # criando o diretorio do script
+     mkdir "$nome_do_diretorio"
+
+    # copiando o script modelo
+    cp ${esqueleto_path}${script} "$nome_do_diretorio"
+
     cd "$nome_do_diretorio"
 
-    # criando um arquivo em branco com o nome do script
-    touch "$nome_do_script"
+    # alterando os valores
+    sed -i "s/%autor%/$nome_do_usuario/" script.sh
+    sed -i "s/%email%/$email_do_usuario/" script.sh
+    sed -i "s/%data%/$data/" script.sh
 
-    # dando permissão de execução pro script
-    chmod +x "$nome_do_script"
-
-    criar_script
+    # renomeando o modelo para o nome certo
+    mv script.sh "$nome_do_script"
   }
 
   # ============================================
   # Função para criar o arquivo de parser
   # ============================================
   function init_parser(){
-    touch "$nome_do_parser"
-    chmod +x "$nome_do_parser"
-    criar_parser
-    criar_arquivo_configuracao
+    local parserFile='/modelos/parser.sh'
+    local configFile='/modelos/arquivo.config'
+
+    # copiando o parser modelo
+    cp ${esqueleto_path}${parserFile} .
+
+    # copiando o arquivo de configuração modelo
+    cp ${esqueleto_path}${configFile} .
+
+    # alterando os valores
+    sed -i "s/%autor%/$nome_do_usuario/" parser.sh
+    sed -i "s/%email%/$email_do_usuario/" parser.sh
+    sed -i "s/%data%/$data/" parser.sh
   }
 
   # ============================================
@@ -586,6 +313,7 @@ CHAVE      valor
           shift
           nome_do_script="$1.sh"
           validacoes "$nome_do_script"
+          pegar_autor_email_pelo_git
           init
           criar_readme
           git_init
@@ -595,6 +323,7 @@ CHAVE      valor
 
         # Criando o parser
         -p | --parser)
+          pegar_autor_email_pelo_git
           init_parser
           print_success "parser criado com sucesso"
           print_info "$mensagem_parser"
@@ -605,6 +334,7 @@ CHAVE      valor
         *)
           nome_do_script="$1.sh"
           validacoes "$nome_do_script"
+          pegar_autor_email_pelo_git
           init
           print_success "script $nome_do_script criado com sucesso"
           exit "$SUCESSO"
