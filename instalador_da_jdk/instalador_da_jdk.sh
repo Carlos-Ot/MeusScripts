@@ -25,12 +25,12 @@ path_java="/usr/lib/jvm"
 jdk_tar_gz=""
 
 # versões que serão instaladas do JDK
-jdk_64bits='jdk-8u25-linux-x64.tar.gz'
-jdk_32bits='jdk-8u25-linux-i586.tar.gz'
+jdk_64bits='jdk-8u131-linux-x64.tar.gz'
+jdk_32bits='jdk-8u131-linux-i586.tar.gz'
 
 # URL de download dosJDK
-jdk_url_64bits='http://download.oracle.com/otn-pub/java/jdk/8u25-b17/'$jdk_64bits
-jdk_url_32bits='http://download.oracle.com/otn-pub/java/jdk/8u25-b17/'$jdk_32bits
+jdk_url_64bits='http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/'$jdk_64bits
+jdk_url_32bits='http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/'$jdk_32bits
 
 # Funções
 # ----------------------------------------------------------------------------
