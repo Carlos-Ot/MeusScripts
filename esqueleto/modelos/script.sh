@@ -40,16 +40,13 @@
   # debug = 1, ligado
   debug=0
 
-  # Cores
-  cor_vermelho="\033[31m"
-  cor_verde="\033[32m"
-  cor_amarelo="\033[33m"
-  fecha_cor="\033[m"
-
   # ============================================
   # Função pra imprimir informação
   # ============================================
   function print_info(){
+    local cor_amarelo="\033[33m"
+    local fecha_cor="\033[m"
+
     printf "${cor_amarelo}$1${fecha_cor}\n"
   }
 
@@ -57,6 +54,9 @@
   # Função pra imprimir mensagem de sucesso
   # ============================================
   function print_success(){
+    local cor_verde="\033[32m"
+    local fecha_cor="\033[m"
+
     printf "${cor_verde}$1${fecha_cor}\n"
   }
 
@@ -64,6 +64,9 @@
   # Função pra imprimir erros
   # ============================================
   function print_error(){
+    local cor_vermelho="\033[31m"
+    local fecha_cor="\033[m"
+
     printf "${cor_vermelho}[ERROR] $1${fecha_cor}\n"
   }
 
