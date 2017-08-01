@@ -38,10 +38,10 @@ Ex:
   5. cria a estrutura de diretório descrita acima.
 
 ## Dependência
-  1. [jq](https://stedolan.github.io/jq/) --> ferramenta que facilita a leitura de json.
+1. [jq](https://stedolan.github.io/jq/) --> ferramenta que facilita a leitura de json.
   
-  2. [funcoeszz](http://funcoeszz.net/) do [@aureliojargas](https://github.com/aureliojargas) --> Série de funções úteis para linha de comando no linux. No caso, esse escript usa uma função específica para auxiliar na renomeação de arquivos
+2. [funcoeszz](http://funcoeszz.net/) do [@aureliojargas](https://github.com/aureliojargas) --> Série de funções úteis para linha de comando no linux. No caso, esse escript usa uma função específica para auxiliar na renomeação de arquivos
   
-  3. id3v2 --> ferramenta que ler e escreve tags ID3.
+3. id3v2 --> ferramenta que ler e escreve tags ID3.
   
-  4. [eyeD3](http://eyed3.nicfit.net/) --> ferramenta que ler e escreve tags ID3.
+4. [eyeD3](http://eyed3.nicfit.net/) --> ferramenta que ler e escreve tags ID3.
