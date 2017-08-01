@@ -140,6 +140,7 @@
       ./funcoeszz zzzz --bashrc
       source ~/.bashrc
       clear
+      cd "$script_dir"
     fi
 
     if [ "$disco"  == "" ];then
@@ -153,6 +154,7 @@
   # ============================================
   function exception(){
     deleteTempFiles
+    exit "$ERRO"
   }
   # ******************* [FIM] Utils *******************
 
@@ -199,20 +201,6 @@
   }
 
   # ============================================
-  # Função que captura o arquivo de imagem pra servir de capa
-  # e dispara a função de salvar
-  # ============================================
-  function createFiles(){
-    if [ ! -f "$IMAGE" ];then
-      print_error "defina uma imagem para os mp3"
-      deleteTempFiles
-      exit $ERRO
-    fi
-    mv *.jpg "$IMAGE" 2> /dev/null
-    ./mt_save.sh "$disco"
-  }
-
-  # ============================================
   # Função que trata as entradas do usuário no menu
   # ============================================
   function handleUserInput(){
@@ -223,13 +211,12 @@
       print_info "[INFORMAÇÕES]:"
       print_info "As tags foram extraídas para o arquivo.json"
       print_info "coloque a imagem da capa do disco .jpg no mesmo diretório do json"
-      print_info "renomeie para cover.json"
       echo ""
 
       read -p "$msg" resposta
       case $resposta in
         ok )
-          createFiles
+          ./mt_save.sh "$disco"
           exit $SUCESSO
         ;;
 

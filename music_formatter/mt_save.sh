@@ -47,6 +47,7 @@
   genre=''
   year=''
   track_total=''
+  image=''
 
   script_dir=$(pwd)
 
@@ -87,7 +88,7 @@
   # tratamento das exceções de interrupções
   # ============================================
   function exception(){
-    echo ""
+    exit "$ERRO"
   }
   # ******************* [FIM] Utils *******************
 
@@ -107,12 +108,19 @@
     genre=$(jq -r '.genre' "$JSON")
     year=$(jq -r '.year' "$JSON")
     track_total=$(jq -r '.track_total' "$JSON")
+    image=$(jq -r '.image' "$JSON")
   }
 
   # ============================================
   # Função que seta as tags nos arquivos de mp3
   # ============================================
   function setTags(){
+
+    if [ ! -f "$image" ];then
+      echo "defina uma imagem para os mp3 no arquivo.json"
+      exit $ERRO
+    fi
+
     mv "$IMAGE" "$disco"_temp
 
     local i=1

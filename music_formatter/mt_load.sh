@@ -87,7 +87,7 @@
   # tratamento das exceções de interrupções
   # ============================================
   function exception(){
-    echo ""
+    exit "$ERRO"
   }
 
   function printJson(){
@@ -114,6 +114,7 @@
   "artist": "@artistTag@",
   "album": "@albumTag@",
   "album_artist": "@album_artistTag@",
+  "image": "",
   "genre": "@genreTag@",
   "year": "@yearTag@",
   "track_total": "@track_total@",
