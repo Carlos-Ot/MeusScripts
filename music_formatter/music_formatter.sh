@@ -168,6 +168,10 @@
   # Função que cria uma pasta temporária com nomes
   # arrumados em minusculos, pra ficar mais fácil
   # de capturar os arquivos de mp3, e salvar num json depois.
+  #
+  # OBS: essa função por via de regra era pra ficar no mt_load.sh
+  # mas precisa ficar aqui, porque o $disco tem que ir pronto
+  # sem a barra do final da string, pro mt_save.sh.
   # ============================================
   function preparaDiretorio(){
     local complete_path=''
