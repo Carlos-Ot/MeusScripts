@@ -119,11 +119,21 @@
   "year": "@yearTag@",
   "track_total": "@track_total@",
 '
-    album_tags=$(echo "$album_tags" | sed "s/@artistTag@/$artist/" 2> /dev/null || artist='')
-    album_tags=$(echo "$album_tags" | sed "s/@albumTag@/$album/" 2> /dev/null || album='')
-    album_tags=$(echo "$album_tags" | sed "s/@album_artistTag@/$album_artist/" 2> /dev/null || album_artist='')
-    album_tags=$(echo "$album_tags" | sed "s/@genreTag@/$genre/" 2> /dev/null || genre='')
-    album_tags=$(echo "$album_tags" | sed "s/@yearTag@/$year/" 2> /dev/null || year='')
+
+    album_tags=$(echo "$album_tags" | sed "s/@artistTag@/$artist/" 2> /dev/null ||\
+      echo "$album_tags" | sed "s/@artistTag@/null/")
+
+    album_tags=$(echo "$album_tags" | sed "s/@albumTag@/$album/" 2> /dev/null ||\
+      echo "$album_tags" | sed "s/@albumTag@/null/")
+
+    album_tags=$(echo "$album_tags" | sed "s/@album_artistTag@/$album_artist/" 2> /dev/null ||\
+      echo "$album_tags" | sed "s/@album_artistTag@/null/")
+
+    album_tags=$(echo "$album_tags" | sed "s/@genreTag@/$genre/" 2> /dev/null ||\
+      echo "$album_tags" | sed "s/@genreTag@/null/")
+
+    album_tags=$(echo "$album_tags" | sed "s/@yearTag@/$year/" 2> /dev/null ||\
+      echo "$album_tags" | sed "s/@yearTag@/null/")
 
     json_stream="$album_tags"
   }
