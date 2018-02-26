@@ -26,7 +26,21 @@
   # ----------------------------------------------------------------------------
   # as variaveis ficam aqui...
 
+  # mensagem de help
+    nome_do_script=$(basename "$0")
 
+    mensagem_help="
+  Uso: $nome_do_script [OPÇÕES] <NOME_DO_SCRIPT>
+
+  OPÇÕES: - opcionais
+    -h, --help  Mostra essa mesma tela de ajuda
+
+  PARAM - obrigatório
+    - descrição do PARAM
+
+  Ex.: ./$nome_do_script -h
+  Ex.: ./$nome_do_script PARAM
+  "
 
 
   # Utils
@@ -81,14 +95,14 @@
   # tratamento de validacoes
   # ============================================
   function validacoes(){
-    echo ""
+    return "$SUCESSO"
   }
 
   # ============================================
   # tratamento das exceções de interrupções
   # ============================================
   function exception(){
-    echo ""
+    return "$ERRO"
   }
   # ******************* [FIM] Utils *******************
 
@@ -101,11 +115,24 @@
   # Função Main
   # ============================================
   function main(){
-    print_info "Ola, meu nome eh testando.sh"
-    echo ""
-    print_success "imprimindo mensagem de sucesso!"
-    print_error "imprimindo mensagem de erro!"
-    exit "$SUCESSO"
+    case "$1" in
+
+      # mensagem de help
+      -h | --help)
+        print_info "$mensagem_help"
+        exit "$SUCESSO"
+      ;;
+
+      # se não for help, é o caminho feliz \o/
+      *)
+        print_info "Ola, meu nome eh testando.sh"
+        echo ""
+        print_success "imprimindo mensagem de sucesso!"
+        print_error "imprimindo mensagem de erro!"
+        exit "$SUCESSO"
+      ;;
+
+    esac
   }
 
   # Main
@@ -113,7 +140,7 @@
   # trata interrrupção do script em casos de ctrl + c (SIGINT) e kill (SIGTERM)
   trap exception SIGINT SIGTERM
   validacoes
-  main
+  main "$1"
 
   # ----------------------------------------------------------------------------
   # FIM do Script =D
