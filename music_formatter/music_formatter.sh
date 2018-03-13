@@ -102,9 +102,9 @@
   # tratamento de validacoes
   # ============================================
   function validacoes(){
-    jqIsInstall=$(which jq > /dev/null; echo $?)
-    id3v2IsInstall=$(which id3v2 > /dev/null; echo $?)
-    eyeD3IsInstall=$(which eyeD3 > /dev/null; echo $?)
+    local jqIsInstall=$(which jq > /dev/null; echo $?)
+    local id3v2IsInstall=$(which id3v2 > /dev/null; echo $?)
+    local eyeD3IsInstall=$(which eyeD3 > /dev/null; echo $?)
 
     # 1. verificar a instalação das funcoeszz, jq e id3v2.
     if [ "$jqIsInstall" != "0" ] || [ "$id3v2IsInstall" != "0" ]; then
