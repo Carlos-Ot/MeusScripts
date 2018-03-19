@@ -211,6 +211,31 @@ Ex.: ./esqueleto -g dummy_script
   }
 
   # ============================================
+  # Função para criar o arquivo de manpage daquele script
+  # ============================================
+  function createManpage(){
+    local nome_da_manpage=$(echo "$nome_do_script" | sed 's/\.sh//g')
+    local manpage='/modelos/manpage.1'
+    local manpage_dir='manpage'
+    local data=$(date "+%d %b %Y")
+
+    mkdir "$manpage_dir"
+    cd "$manpage_dir"
+
+    cp ${esqueleto_path}${manpage} .
+
+    sed -i "s/@nome_do_script@/$nome_do_script/" "manpage.1"
+    sed -i "s/@autor@/$nome_do_usuario/" "manpage.1"
+    sed -i "s/@email@/$email_do_usuario/" "manpage.1"
+    sed -i "s/@data@/$data/" "manpage.1"
+
+    # renomeando a manpage para o nome certo
+    mv "manpage.1" "${nome_da_manpage}.1"
+    
+    cd ..
+  }
+
+  # ============================================
   # Função Main
   #
   # Param $1 e $2 = Parametros passados pro script
@@ -245,6 +270,7 @@ Ex.: ./esqueleto -g dummy_script
           validacoes "$nome_do_script"
           pegar_autor_email_pelo_git
           init
+          createManpage
           print_success "script $nome_do_script criado com sucesso"
           exit "$SUCESSO"
         ;;
