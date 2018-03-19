@@ -32,6 +32,8 @@
     mensagem_help="
   Uso: $nome_do_script [OPÇÕES] <NOME_DO_SCRIPT>
 
+  Descrição: .....
+
   OPÇÕES: - opcionais
     -h, --help  Mostra essa mesma tela de ajuda
 
