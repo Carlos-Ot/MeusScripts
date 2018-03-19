@@ -118,24 +118,11 @@
   # Função Main
   # ============================================
   function main(){
-    case "$1" in
-
-      # mensagem de help
-      -h | --help)
-        print_info "$mensagem_help"
-        exit "$SUCESSO"
-      ;;
-
-      # se não for help, é o caminho feliz \o/
-      *)
-        print_info "Ola, meu nome eh testando.sh"
-        echo ""
-        print_success "imprimindo mensagem de sucesso!"
-        print_error "imprimindo mensagem de erro!"
-        exit "$SUCESSO"
-      ;;
-
-    esac
+    print_info "Ola, meu nome eh testando.sh"
+    echo ""
+    print_success "imprimindo mensagem de sucesso!"
+    print_error "imprimindo mensagem de erro!"
+    exit "$SUCESSO"
   }
 
   # ============================================
