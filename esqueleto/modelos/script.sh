@@ -111,6 +111,9 @@
 
   # Funções do Script
   # ----------------------------------------------------------------------------
+
+  # funções específicas do script ficam aqui...
+
   # ============================================
   # Função Main
   # ============================================
@@ -135,10 +138,26 @@
     esac
   }
 
+  # ============================================
+  # Função que exibe o help
+  # ============================================
+  function verifyHelp(){
+    case "$1" in
+
+      # mensagem de help
+      -h | --help)
+        print_info "$mensagem_help"
+        exit "$SUCESSO"
+      ;;
+
+    esac
+  }
+
   # Main
   # ----------------------------------------------------------------------------
   # trata interrrupção do script em casos de ctrl + c (SIGINT) e kill (SIGTERM)
   trap exception SIGINT SIGTERM
+  verifyHelp "$1"
   validacoes
   main "$1"
 

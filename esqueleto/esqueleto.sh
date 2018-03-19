@@ -15,19 +15,17 @@
   #    OPÇÕES: - opcionais
   #   -h, --help  Mostra essa mesma tela de ajuda
   #   -g, --git    Versiona o script com git
-  #   -p, --parser    Cria um parser com um arquivo de configuração
   #
   #    NOME_DO_SCRIPT - obrigatório
   #    - Nome do script a ser criado
   #
   #   Ex.: ./esqueleto -h
-  #   Ex.: ./esqueleto -p
   #   Ex.: ./esqueleto dummy_script
   #   Ex.: ./esqueleto -g dummy_script
   # ----------------------------------------------------------------------------
   # Autor: Frank Junior <frankcbjunior@gmail.com>
   # Desde: 2013-12-24
-  # Versão: 4
+  # Versão: 5
   # ----------------------------------------------------------------------------
 
 
@@ -52,71 +50,14 @@ Uso: $(basename "$0") [OPÇÕES] <NOME_DO_SCRIPT>
 OPÇÕES: - opcionais
   -h, --help  Mostra essa mesma tela de ajuda
   -g, --git   Versiona o script com git
-  -p, --parser   Cria um parser com um arquivo de configuração
 
 NOME_DO_SCRIPT - obrigatório
   - Nome do script a ser criado
 
 Ex.: ./esqueleto -h
-Ex.: ./esqueleto -p
 Ex.: ./esqueleto dummy_script
 Ex.: ./esqueleto -g dummy_script
   "
-  mensagem_parser="
-Agora que o parser foi criado, recomendo que você adicione
-essas funções no seu script para usar o parser e o arquivo de configuração:
-
-# ============================================
-# função que carrega os dados do arquivo
-# de configuração.
-# ============================================
-function init(){
-  # Carregando a configuração do arquivo externo
-  local chaves=\"\$(./\"\$parser_file\" \"\$config_file\")\"
-
-  # consultando a chave
-  chave=\$(retorna_valor \"\$chaves\" \"chave\")
-
-  validacao_valores
-}
-
-# ============================================
-# função para validar os valores retornados
-# pelo arquivo de configuração
-# ============================================
-function validacao_valores(){
-  # valide as chaves aqui
-}
-
-# ============================================
-# funcão para pegar o valor da chave procurada
-#
-# Parametro 1 [\$1] = A lista de chaves do \$config_file.
-# Parametro 2 [\$2] = A chave no qual deseja pegar o valor.
-# ============================================
-function retorna_valor(){
-  local chaves=\$1
-  local chave=\$2
-  local linha=""
-  local valor=""
-
-  # filtrando a saída pela chave que foi passada por parametro
-  linha=\$(echo -e \"\$chaves\" | grep -i \"\$chave\")
-
-  # validação, para chave duplicada
-  if [ \$(echo -e \"\$linha\" | wc -l) -gt 1 ]; then
-    print_erro \"chave \$chave duplicada, no arquivo de configuração\"
-    exit 1
-  fi
-
-  # pegando a somente o valor da chave, e imprimindo na saída padrão
-  valor=\$(echo \"\$linha\" | cut -d \"=\" -f2 | sed 's/\\\\\"//g')
-
-  echo \"\$valor\"
-}
-  "
-
-
 
 
   # Utils
@@ -130,16 +71,13 @@ function retorna_valor(){
   # debug = 1, ligado
   debug=1
 
-  # Cores
-  cor_vermelho="\033[31m"
-  cor_verde="\033[32m"
-  cor_amarelo="\033[33m"
-  fecha_cor="\033[m"
-
   # ============================================
   # Função pra imprimir informação
   # ============================================
   function print_info(){
+    local cor_amarelo="\033[33m"
+    local fecha_cor="\033[m"
+
     printf "${cor_amarelo}$1${fecha_cor}\n"
   }
 
@@ -147,6 +85,9 @@ function retorna_valor(){
   # Função pra imprimir mensagem de sucesso
   # ============================================
   function print_success(){
+    local cor_verde="\033[32m"
+    local fecha_cor="\033[m"
+
     printf "${cor_verde}$1${fecha_cor}\n"
   }
 
@@ -154,14 +95,10 @@ function retorna_valor(){
   # Função pra imprimir erros
   # ============================================
   function print_error(){
-    printf "${cor_vermelho}[ERROR] $1${fecha_cor}\n"
-  }
+    local cor_vermelho="\033[31m"
+    local fecha_cor="\033[m"
 
-  # ============================================
-  # funcao de debug
-  # ============================================
-  function debug_log(){
-    [ "$debug" = 1 ] && print_info "[DEBUG] $*"
+    printf "${cor_vermelho}[ERROR] $1${fecha_cor}\n"
   }
 
   # ============================================
@@ -274,25 +211,6 @@ function retorna_valor(){
   }
 
   # ============================================
-  # Função para criar o arquivo de parser
-  # ============================================
-  function init_parser(){
-    local parserFile='/modelos/parser.sh'
-    local configFile='/modelos/arquivo.config'
-
-    # copiando o parser modelo
-    cp ${esqueleto_path}${parserFile} .
-
-    # copiando o arquivo de configuração modelo
-    cp ${esqueleto_path}${configFile} .
-
-    # alterando os valores
-    sed -i "s/%autor%/$nome_do_usuario/" parser.sh
-    sed -i "s/%email%/$email_do_usuario/" parser.sh
-    sed -i "s/%data%/$data/" parser.sh
-  }
-
-  # ============================================
   # Função Main
   #
   # Param $1 e $2 = Parametros passados pro script
@@ -318,15 +236,6 @@ function retorna_valor(){
           criar_readme
           git_init
           print_success "script $nome_do_script criado com sucesso"
-          exit "$SUCESSO"
-        ;;
-
-        # Criando o parser
-        -p | --parser)
-          pegar_autor_email_pelo_git
-          init_parser
-          print_success "parser criado com sucesso"
-          print_info "$mensagem_parser"
           exit "$SUCESSO"
         ;;
 
