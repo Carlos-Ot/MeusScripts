@@ -116,9 +116,9 @@ Ex.: ./$nome_do_script /path/do/disco
     fi
 
     # instalando o ffmpeg caso não tenha instalado
-    if ! which ffmpeg > /dev/null; then
+    if ! type ffmpeg > /dev/null 2>&1; then
       echo "++++ instalando o ffmpeg ++++"
-      sudo apt-get install ffmpeg
+      sudo apt-get install -y ffmpeg
       clear
     fi
 
@@ -143,13 +143,20 @@ Ex.: ./$nome_do_script /path/do/disco
   # e coloca-os em uma pasta separada chamada "wav"
   # ============================================
   function convert_files(){
+
+    # se já existir a pasta 'wav', delete ela.
+    if [ -d "$disco"/wav ];then
+      rm -rf "$disco"/wav
+    fi
+
     # criando a pasta wav
     mkdir "$disco"/wav
 
     print_info "convertendo os arquivos..."
     # convertendo os arquivos
     for musica in "$disco"/*.mp3 ; do
-      ffmpeg -loglevel panic -i "$musica" -acodec pcm_u8 -ar 22050 "$musica".wav > /dev/null
+      # Expanção de variável, retira a extensão do arquivo de mp3
+      ffmpeg -loglevel panic -i "$musica" -acodec pcm_u8 -ar 22050 "${musica%.mp3}".wav > /dev/null
     done
 
     # movendo todos os arquivo.wav para a pasta
