@@ -153,14 +153,13 @@ Ex.: ./$nome_do_script /path/do/disco
     mkdir "$disco"/wav
 
     print_info "convertendo os arquivos..."
-    # convertendo os arquivos
     for musica in "$disco"/*.mp3 ; do
-      local musica_wav="${disco}/wav/$(basename "${musica%.mp3}")"
-      
+
       # Expanção de variável, retira a extensão do arquivo de mp3
+      local musica_wav="${disco}/wav/$(basename "${musica%.mp3}")"
+
       ffmpeg -loglevel panic -i "$musica" -acodec pcm_u8 -ar 22050 "$musica_wav".wav > /dev/null
     done
-
     print_info "pronto!"
   }
 
