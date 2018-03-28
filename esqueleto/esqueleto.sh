@@ -1,43 +1,47 @@
   #!/bin/bash
 
-  # Cabeçalho
-  # ----------------------------------------------------------------------------
-  # Descrição:
-  #   Esqueleto de Script.
-  #   Script feito para gerar uma especie de casca de script,
-  #   facilitando na hora da criação de um script novo.
-  #   E eu não podia deixar de fazer uma referencia ao Esqueleto do He-man =)
-  #
-  # ----------------------------------------------------------------------------
-  # Uso:
-  #    ./esqueleto [OPÇÕES] <NOME_DO_SCRIPT>
-  #
-  #    OPÇÕES: - opcionais
-  #   -h, --help  Mostra essa mesma tela de ajuda
-  #   -g, --git    Versiona o script com git
-  #
-  #    NOME_DO_SCRIPT - obrigatório
-  #    - Nome do script a ser criado
-  #
-  #   Ex.: ./esqueleto -h
-  #   Ex.: ./esqueleto dummy_script
-  #   Ex.: ./esqueleto -g dummy_script
-  # ----------------------------------------------------------------------------
-  # Autor: Frank Junior <frankcbjunior@gmail.com>
-  # Desde: 2013-12-24
-  # Versão: 5
-  # ----------------------------------------------------------------------------
+################################################################################
+#
+# Descrição:
+#   Esqueleto de Script.
+#   Script feito para gerar uma especie de casca de script,
+#   facilitando na hora da criação de um script novo.
+#   E eu não podia deixar de fazer uma referencia ao Esqueleto do He-man =)
+#
+################################################################################
+#
+# Uso:
+#    ./esqueleto [OPÇÕES] <NOME_DO_SCRIPT>
+#
+#    OPÇÕES: - opcionais
+#   -h, --help  Mostra essa mesma tela de ajuda
+#   -g, --git    Versiona o script com git
+#
+#    NOME_DO_SCRIPT - obrigatório
+#    - Nome do script a ser criado
+#
+#   Ex.: ./esqueleto -h
+#   Ex.: ./esqueleto dummy_script
+#   Ex.: ./esqueleto -g dummy_script
+#
+################################################################################
+#
+# Autor: Frank Junior <frankcbjunior@gmail.com>
+# Desde: 2013-12-24
+# Versão: 5
+#
+################################################################################
 
 
-  # Configurações
-  # ----------------------------------------------------------------------------
-  # set:
-  # -e: se encontrar algum erro, termina a execução imediatamente
+################################################################################
+# Configurações
+# set:
+# -e: se encontrar algum erro, termina a execução imediatamente
   set -e
 
 
-  # Variáveis
-  # ----------------------------------------------------------------------------
+################################################################################
+# Variáveis - todas as variáveis ficam aqui
 
   nome_do_usuario=""
   email_do_usuario=""
@@ -59,9 +63,8 @@ Ex.: ./esqueleto dummy_script
 Ex.: ./esqueleto -g dummy_script
   "
 
-
-  # Utils
-  # ****************************************************************************
+################################################################################
+# Utils - funções de utilidades
 
   # códigos de retorno
   SUCESSO=0
@@ -75,31 +78,42 @@ Ex.: ./esqueleto -g dummy_script
   # Função pra imprimir informação
   # ============================================
   function print_info(){
-    local cor_amarelo="\033[33m"
-    local fecha_cor="\033[m"
+    local amarelo="\033[33m"
+    local reset="\033[m"
 
-    printf "${cor_amarelo}$1${fecha_cor}\n"
+    printf "${amarelo}$1${reset}\n"
   }
 
   # ============================================
   # Função pra imprimir mensagem de sucesso
   # ============================================
   function print_success(){
-    local cor_verde="\033[32m"
-    local fecha_cor="\033[m"
+    local verde="\033[32m"
+    local reset="\033[m"
 
-    printf "${cor_verde}$1${fecha_cor}\n"
+    printf "${verde}$1${reset}\n"
   }
 
   # ============================================
   # Função pra imprimir erros
   # ============================================
   function print_error(){
-    local cor_vermelho="\033[31m"
-    local fecha_cor="\033[m"
+    local vermelho="\033[31m"
+    local reset="\033[m"
 
-    printf "${cor_vermelho}[ERROR] $1${fecha_cor}\n"
+    printf "${vermelho}[ERROR] $1${reset}\n"
   }
+
+  # ============================================
+  # tratamento das excecoes de interrupções
+  # ============================================
+  function exception(){
+    print_error "Alguem me matou com um um 'kill -9'"
+    exit "$ERRO"
+  }
+
+################################################################################
+# Validações - regras de negocio até parametros
 
   # ============================================
   # tratamento de validacoes da criação do script
@@ -123,20 +137,9 @@ Ex.: ./esqueleto -g dummy_script
 
   }
 
-  # ============================================
-  # tratamento das excecoes de interrupções
-  # ============================================
-  function exception(){
-    print_error "Alguem me matou com um um 'kill -9'"
-    exit "$ERRO"
-  }
-  # ******************* [FIM] Utils *******************
+################################################################################
+# Funções do Script - funções próprias e específicas do script
 
-
-
-
-  # Funções do Script
-  # ----------------------------------------------------------------------------
   # ============================================
   # função que pega o nome do autor e o email
   # através das configurações do git.
@@ -231,7 +234,7 @@ Ex.: ./esqueleto -g dummy_script
 
     # renomeando a manpage para o nome certo
     mv "manpage.1" "${nome_da_manpage}.1"
-    
+
     cd ..
   }
 
@@ -281,8 +284,9 @@ Ex.: ./esqueleto -g dummy_script
 
   }
 
-  # Main
-  # ----------------------------------------------------------------------------
+################################################################################
+# Main - execução do script
+
   # trata interrrupção do script em casos de ctrl + c (SIGINT) e kill (SIGTERM)
   trap exception SIGINT SIGTERM
 

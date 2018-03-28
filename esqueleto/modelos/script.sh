@@ -1,30 +1,35 @@
 #!/bin/bash
 
-  # Cabeçalho
-  # ----------------------------------------------------------------------------
-  # Descrição:
-  #    TODO...
-  #
-  # ----------------------------------------------------------------------------
-  # Uso:
-  #    TODO..
-  # ----------------------------------------------------------------------------
-  # Autor: %autor% <%email%>
-  # Desde: %data%
-  # Versão: 1
-  # ----------------------------------------------------------------------------
+################################################################################
+#
+# Descrição:
+#    TODO...
+#
+################################################################################
+#
+# Uso:
+#    TODO..
+#
+################################################################################
+#
+# Autor: %autor% <%email%>
+# Desde: %data%
+# Versão: 1
+#
+################################################################################
 
 
-  # Configurações
-  # ----------------------------------------------------------------------------
-  # set:
-  # -e: se encontrar algum erro, termina a execução imediatamente
+################################################################################
+# Configurações
+# set:
+# -e: se encontrar algum erro, termina a execução imediatamente
   set -e
 
 
-  # Variáveis
-  # ----------------------------------------------------------------------------
-  # as variaveis ficam aqui...
+################################################################################
+# Variáveis - todas as variáveis ficam aqui
+
+# as variaveis ficam aqui...
 
   # mensagem de help
     nome_do_script=$(basename "$0")
@@ -45,8 +50,8 @@
   "
 
 
-  # Utils
-  # ****************************************************************************
+################################################################################
+# Utils - funções de utilidades
 
   # códigos de retorno
   SUCESSO=0
@@ -60,30 +65,30 @@
   # Função pra imprimir informação
   # ============================================
   function print_info(){
-    local cor_amarelo="\033[33m"
-    local fecha_cor="\033[m"
+    local amarelo="\033[33m"
+    local reset="\033[m"
 
-    printf "${cor_amarelo}$1${fecha_cor}\n"
+    printf "${amarelo}$1${reset}\n"
   }
 
   # ============================================
   # Função pra imprimir mensagem de sucesso
   # ============================================
   function print_success(){
-    local cor_verde="\033[32m"
-    local fecha_cor="\033[m"
+    local verde="\033[32m"
+    local reset="\033[m"
 
-    printf "${cor_verde}$1${fecha_cor}\n"
+    printf "${verde}$1${reset}\n"
   }
 
   # ============================================
   # Função pra imprimir erros
   # ============================================
   function print_error(){
-    local cor_vermelho="\033[31m"
-    local fecha_cor="\033[m"
+    local vermelho="\033[31m"
+    local reset="\033[m"
 
-    printf "${cor_vermelho}[ERROR] $1${fecha_cor}\n"
+    printf "${vermelho}[ERROR] $1${reset}\n"
   }
 
   # ============================================
@@ -94,25 +99,24 @@
   }
 
   # ============================================
+  # tratamento das exceções de interrupções
+  # ============================================
+  function exception(){
+    return "$ERRO"
+  }
+
+################################################################################
+# Validações - regras de negocio até parametros
+
+  # ============================================
   # tratamento de validacoes
   # ============================================
   function validacoes(){
     return "$SUCESSO"
   }
 
-  # ============================================
-  # tratamento das exceções de interrupções
-  # ============================================
-  function exception(){
-    return "$ERRO"
-  }
-  # ******************* [FIM] Utils *******************
-
-
-
-
-  # Funções do Script
-  # ----------------------------------------------------------------------------
+################################################################################
+# Funções do Script - funções próprias e específicas do script
 
   # funções específicas do script ficam aqui...
 
@@ -142,13 +146,14 @@
     esac
   }
 
-  # Main
-  # ----------------------------------------------------------------------------
+################################################################################
+# Main - execução do script
+
   # trata interrrupção do script em casos de ctrl + c (SIGINT) e kill (SIGTERM)
   trap exception SIGINT SIGTERM
   verifyHelp "$1"
   validacoes
   main "$1"
 
-  # ----------------------------------------------------------------------------
-  # FIM do Script =D
+################################################################################
+# FIM do Script =D
