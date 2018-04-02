@@ -21,3 +21,5 @@ Os scrips são:
 - [Check_music_file_format](https://github.com/frankjuniorr/MeusScripts/tree/master/check_music_file_format) - Script feito para checkar o formato de nomeclatura de toda a pasta de música
 
 - [music_formatter](https://github.com/frankjuniorr/MeusScripts/tree/master/music_formatter) - Script usado pra consertar tags ID3 de arquivos MP3. Ele escreve as tags, e cria uma estrutura de diretório própria. De acordo com as seguintes padrão de nomeclatura:
+
+- [ubuntu_install](https://github.com/frankjuniorr/MeusScripts/tree/master/ubuntu_install) - Script para instalar as primeiras coisas do computador, no Ubuntu. Ideal para computador recém-formatado.
