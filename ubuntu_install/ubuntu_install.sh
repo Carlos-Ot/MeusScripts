@@ -59,51 +59,47 @@
   sudo apt-get update
 
   print_info "Instalando temas..."
-  sudo apt-get -y install arc-theme
-  sudo apt-get -y install yosembiance-gtk-theme
-  sudo apt-get -y install adapta-gtk-theme
-  sudo apt-get -y install papirus-icon-theme
+
+  sudo apt-get -y install \
+  arc-theme \
+  yosembiance-gtk-theme \
+  adapta-gtk-theme \
+  papirus-icon-theme \
 
   # ------------------------ Baixando algumas ferramentas e utilitários ------------------------
   print_info "Instalando algumas ferramentas e utilitários..."
 
-  # pois é, não vem por padrão instalado.
-  sudo apt-get -y install zip
+  # [gksu] - para executar o “Disk Usage Analyzer (baobab)”, usando o  “gksudo baobab”
+  # [git]
+  # [meld] - usado para os diffs do git
+  # [vim]
+  # [zip] - pois é, não vem instalado por padrão.
+  # [unity-tweak-tool] - usado para customizar a interface gráfica
+  # [atom] - IDE
+  # [browser-plugin-vlc] - VLC
+  # [nautilus-open-terminal] - plugin do nautilus para abrir o terminal
 
-  # para executar o “Disk Usage Analyzer (baobab)”, usando o  “gksudo baobab”
-  sudo apt-get -y install gksu
+  sudo apt-get -y install \
+  gksu \
+  git \
+  meld \
+  vim \
+  zip \
+  unity-tweak-tool \
+  spotify-client \
+  atom \
+  browser-plugin-vlc \
+  nautilus-open-terminal
 
-  # instalando o git
-  sudo apt-get -y install git
-
-  # instalando o meld
-  sudo apt-get -y install meld
-
-  # instalando o vim
-  sudo apt-get -y install vim
-
-  # instalando o Unity Tweak Tool
-  sudo apt-get -y install unity-tweak-tool
-
-  # instalando Spotify
-  sudo apt-get install -y spotify-client
-
-  # instalando o Atom
-  sudo apt-get install -y atom
-
-  # instalando o VLC
-  sudo apt-get install vlc browser-plugin-vlc
-
-  # Extensão Nautilus para abrir o terminal
-  sudo apt-get install -y nautilus-open-terminal
 
   print_info "Removendo algumas coisas..."
 
-  # removendo o Thunderbird, não uso cliente de email
-  sudo apt-get -y remove thunderbird
+  # [thunderbird] - cliente de email que eu não Uso
+  # [aisleriot gnome-mahjongg gnome-mines gnome-sudoku] - games nativos
 
-  # removendo os games
-  sudo apt-get remove aisleriot gnome-mahjongg gnome-mines gnome-sudoku
+  sudo apt-get -y remove \
+  thunderbird \
+  aisleriot gnome-mahjongg gnome-mines gnome-sudoku
 
 
 
