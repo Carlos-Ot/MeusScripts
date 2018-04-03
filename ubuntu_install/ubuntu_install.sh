@@ -136,6 +136,10 @@
     echo "$dropboxFile" > ~/.config/autostart/dropbox.desktop
   }
 
+
+
+
+# ------------------------------ MAIN ------------------------------
   # updagrade inicial, por volta de uns 300 MB
   init_updates
 
