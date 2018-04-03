@@ -27,14 +27,18 @@
   	printf "${amarelo}$1${reset}\n"
   }
 
+  # ============================================
   # Fazendo as atualizações iniciais
+  # ============================================
   function init_updates(){
     print_info "Fazendo as atualizações iniciais..."
     sudo apt-get -y upgrade
     sudo apt-get -y dist-upgrade
   }
 
+  # ============================================
   # adicionando repositórios dos Dark Themes
+  # ============================================
   function add_dark_themes(){
     print_info "Adicionando repositórios dos Dark Themes..."
     # para instalar o Arc-Theme e o Yosembiance theme
@@ -47,7 +51,9 @@
     sudo apt-add-repository ppa:papirus/papirus -y
   }
 
+  # ============================================
   # adicionando repositório do Spotify
+  # ============================================
   function add_spotify_repo(){
     print_info "Adicionando repositório do Spotify..."
     # 1. Add the Spotify repository signing keys to be able to verify downloaded packages
@@ -56,14 +62,18 @@
     echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
   }
 
+  # ============================================
   # adicionando repositório do Atom
+  # ============================================
   function add_atom_repo(){
     print_info "Adicionando repositório do Atom..."
     curl -L https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
     sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
   }
 
+  # ============================================
   # instalação dos Dark Themes
+  # ============================================
   function install_dark_themes(){
     print_info "Instalando temas..."
 
@@ -74,7 +84,9 @@
     papirus-icon-theme \
   }
 
+  # ============================================
   # instala ferramentas e programas utils
+  # ============================================
   function install_tools(){
     print_info "Instalando algumas ferramentas e utilitários..."
 
@@ -101,7 +113,9 @@
     nautilus-open-terminal
   }
 
+  # ============================================
   # remove pacotes que eu não uso
+  # ============================================
   function remove_unused_packages(){
     print_info "Removendo algumas coisas..."
 
@@ -113,7 +127,9 @@
     aisleriot gnome-mahjongg gnome-mines gnome-sudoku
   }
 
+  # ============================================
   # instalando o Dropbox
+  # ============================================
   function install_dropbox(){
     # olhe: https://www.dropbox.com/install-linux
     print_info "======= Baixando O Dropbox ======="
