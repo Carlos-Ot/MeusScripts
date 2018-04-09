@@ -111,6 +111,10 @@
     atom \
     browser-plugin-vlc \
     nautilus-open-terminal
+
+    # package do Atom
+    # [https://atom.io/packages/file-icons]
+    apm install file-icons
   }
 
   # ============================================
