@@ -23,9 +23,5 @@ install: true
 
 script: echo "running script build in "$TRAVIS_OS_NAME" ...."
 
-branches:
-  only:
-  - master
-
 notifications:
   email: true
