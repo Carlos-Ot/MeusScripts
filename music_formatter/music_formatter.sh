@@ -191,10 +191,8 @@
     # se não, dá erro.
     # e cria uma pasta temporária onde vai ser feita
     # as operações.
-  	if [ $(echo "$diretorio_do_disco" | grep " " | wc -l) == "1" ];then
-  		disco=$(echo "$diretorio_do_disco" | tr ' ' '_')
-      cp -r "$diretorio_do_disco" "$disco"_temp
-  	fi
+		disco=$(echo "$diretorio_do_disco" | tr ' ' '_')
+    cp -r "$diretorio_do_disco" "$disco"_temp
 
     # arruma o nome delas, pra ficar mais fácil de capturar.
     cd "$disco"_temp
