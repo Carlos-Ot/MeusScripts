@@ -7,6 +7,7 @@
   #    Esse é o script principal que usa dois módulos ('mt_load.sh' e 'mt_save.sh').
   #    Escrever as tags, e criar uma estrutura de diretório própria.
   #    Por ser o módulo de start, pode ser facilmente substituído por uma GUI no futuro
+  #     adicionando uma modificação de teste
   #
   # ----------------------------------------------------------------------------
   # Uso:
