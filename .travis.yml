@@ -3,7 +3,7 @@ language: bash
 os:
   - linux
 
-  addons:
+addons:
   apt:
     packages:
       - ffmpeg # used in 'cnvert_mp3_to_wav.sh'
