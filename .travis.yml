@@ -20,4 +20,4 @@ before_install:
   - rm -rf  eyeD3-0.7.11 eyeD3-0.7.11.tar.gz
 
 notifications:
-  email: false 
+  email: true 
