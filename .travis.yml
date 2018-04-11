@@ -4,22 +4,6 @@ sudo: true
 os:
   - linux
 
-addons:
-  apt:
-    packages:
-      # - ffmpeg # used in 'cnvert_mp3_to_wav.sh'
-      - jq     # used in 'music_formatter.sh'
-      - id3v2  # used in 'music_formatter.sh'
-
-before_install:
-  # used in 'music_formatter.sh' to install eyeD3
-  - wget http://eyed3.nicfit.net/releases/eyeD3-0.7.11.tar.gz > /dev/null
-  - tar -xzf eyeD3-0.7.11.tar.gz
-  - cd eyeD3-0.7.11
-  - python setup.py install
-  - cd ..
-  - rm -rf  eyeD3-0.7.11 eyeD3-0.7.11.tar.gz
-
 install: true
 
 script: echo "running script build in "$TRAVIS_OS_NAME" ...."
