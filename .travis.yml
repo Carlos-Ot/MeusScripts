@@ -19,5 +19,8 @@ before_install:
   - cd ..
   - rm -rf  eyeD3-0.7.11 eyeD3-0.7.11.tar.gz
 
+script:
+  - echo "running script build...."
+
 notifications:
-  email: true 
+  email: true
