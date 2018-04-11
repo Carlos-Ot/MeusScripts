@@ -19,8 +19,7 @@ before_install:
   - cd ..
   - rm -rf  eyeD3-0.7.11 eyeD3-0.7.11.tar.gz
 
-install:
-  - sudo apt-get install -y ffmpeg jq id3v2
+install: true
 
 script: echo "running script build in "$TRAVIS_OS_NAME" ...."
 
