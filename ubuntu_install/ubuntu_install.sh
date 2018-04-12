@@ -112,9 +112,12 @@
     browser-plugin-vlc \
     nautilus-open-terminal
 
-    # package do Atom
-    # [https://atom.io/packages/file-icons]
-    apm install file-icons
+    print_info "Incrementando o Atom..."
+    # Install some Atom Packages
+    apm install \
+    file-icons \              # Atom package to set specific file icons in tree
+    atom-material-ui \        # Atom package to Material Design Theme
+    atom-material-syntax-dark # Atom package to Material Design syntax dark
   }
 
   # ============================================
