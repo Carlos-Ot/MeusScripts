@@ -115,9 +115,10 @@
     print_info "Incrementando o Atom..."
     # Install some Atom Packages
     apm install \
-    file-icons \              # Atom package to set specific file icons in tree
-    atom-material-ui \        # Atom package to Material Design Theme
-    atom-material-syntax-dark # Atom package to Material Design syntax dark
+    file-icons \                # Atom package to set specific file icons in tree
+    atom-material-ui \          # Atom package to Material Design Theme
+    atom-material-syntax-dark \ # Atom package to Material Design syntax dark
+    atom-beautify               # Atom package to auto formatting code [with ctrl+alt+b]
   }
 
   # ============================================
