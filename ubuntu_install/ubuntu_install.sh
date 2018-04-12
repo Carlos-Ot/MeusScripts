@@ -15,13 +15,13 @@
 # Versão: 1
 ################################################################################
 
-  set -e
+set -e
 
-  # ============================================
-  # Função pra imprimir informação
-  # ============================================
-  function print_info(){
-  	local amarelo="\033[33m"
+# ============================================
+# Função pra imprimir informação
+# ============================================
+function print_info(){
+    local amarelo="\033[33m"
   	local reset="\033[m"
 
   	printf "${amarelo}$1${reset}\n"
@@ -119,6 +119,10 @@
     atom-material-ui \          # Atom package to Material Design Theme
     atom-material-syntax-dark \ # Atom package to Material Design syntax dark
     atom-beautify               # Atom package to auto formatting code [with ctrl+alt+b]
+
+    # Python code that [atom-beautify] use to formatting Shell Script.
+    # this is necessary to [atom-beautify] works
+    pip install beautysh
   }
 
   # ============================================
