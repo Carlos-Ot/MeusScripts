@@ -77,7 +77,7 @@ Ex.: ./esqueleto -g dummy_script
   # ============================================
   # Função pra imprimir informação
   # ============================================
-  function print_info(){
+  _print_info(){
     local amarelo="\033[33m"
     local reset="\033[m"
 
@@ -87,7 +87,7 @@ Ex.: ./esqueleto -g dummy_script
   # ============================================
   # Função pra imprimir mensagem de sucesso
   # ============================================
-  function print_success(){
+  _print_success(){
     local verde="\033[32m"
     local reset="\033[m"
 
@@ -97,7 +97,7 @@ Ex.: ./esqueleto -g dummy_script
   # ============================================
   # Função pra imprimir erros
   # ============================================
-  function print_error(){
+  _print_error(){
     local vermelho="\033[31m"
     local reset="\033[m"
 
@@ -107,8 +107,8 @@ Ex.: ./esqueleto -g dummy_script
   # ============================================
   # tratamento das excecoes de interrupções
   # ============================================
-  function exception(){
-    print_error "Alguem me matou com um um 'kill -9'"
+  _exception(){
+    _print_error "Alguem me matou com um um 'kill -9'"
     exit "$ERRO"
   }
 
@@ -118,20 +118,19 @@ Ex.: ./esqueleto -g dummy_script
   # ============================================
   # tratamento de validacoes da criação do script
   # ============================================
-  function validacoes(){
-
+  validacoes(){
     local script=$(echo "$1" | sed 's/\.sh//')
 
     # se não passar nenhum parametro, dá erro
     if [ "$script" == "" ];then
-      print_error "# Uso: ./esqueleto <nome_do_novo_script>"
-      print_error "# Ex.: ./esqueleto dummy_script"
+      _print_error "# Uso: ./esqueleto <nome_do_novo_script>"
+      _print_error "# Ex.: ./esqueleto dummy_script"
       exit "$ERRO"
     fi
 
     # verificando se o script já foi criado
     if [ -d "$script" ]; then
-      print_error "Script já existe com esse nome"
+      _print_error "Script já existe com esse nome"
       exit "$ERRO"
     fi
 
@@ -144,7 +143,7 @@ Ex.: ./esqueleto -g dummy_script
   # função que pega o nome do autor e o email
   # através das configurações do git.
   # ============================================
-  function pegar_autor_email_pelo_git(){
+  pegar_autor_email_pelo_git(){
     # pegando as configurações do git para preencher o cabeçalho.
     if [ $(which git > /dev/null; echo $?) == "0" ];then
       email_do_usuario="$(cd ~; git config --list | grep "user.email" | cut -d "=" -f2; cd - > /dev/null)"
@@ -160,8 +159,7 @@ Ex.: ./esqueleto -g dummy_script
   # ============================================
   # função que cria o README.md
   # ============================================
-  function criar_readme(){
-
+  criar_readme(){
   local readme='/modelos/README.md'
 
   # voltando pra pasta do script
@@ -179,7 +177,7 @@ Ex.: ./esqueleto -g dummy_script
   # ============================================
   # versionar o script com o git
   # ============================================
-  function git_init(){
+  git_init(){
     if [ $(which git > /dev/null; echo $?) == "0" ];then
       echo "*~" > .gitignore
       git init > /dev/null
@@ -191,8 +189,8 @@ Ex.: ./esqueleto -g dummy_script
   # ============================================
   # Função para criar o arquivo de script
   # ============================================
-  function init(){
-    nome_do_diretorio=$(echo "$nome_do_script" | sed 's/\.sh//g')
+  init(){
+    nome_do_diretorio="${nome_do_script%.sh}"
     local script='/modelos/script.sh'
     local data=$(date +%d-%m-%Y)
 
@@ -216,16 +214,19 @@ Ex.: ./esqueleto -g dummy_script
   # ============================================
   # Função para criar o arquivo de manpage daquele script
   # ============================================
-  function createManpage(){
-    local nome_da_manpage=$(echo "$nome_do_script" | sed 's/\.sh//g')
+  create_manpage(){
+    # removendo a extensão do arquivo
+    local nome_da_manpage="${nome_do_script%.sh}"
     local manpage='/modelos/manpage.1'
     local manpage_dir='manpage'
     local data=$(date "+%d %b %Y")
 
     mkdir "$manpage_dir"
-    cd "$manpage_dir"
+    cd ..
 
-    cp ${esqueleto_path}${manpage} .
+    cp ${esqueleto_path}${manpage} "${nome_do_diretorio}/${manpage_dir}"
+
+    cd "${nome_do_diretorio}/${manpage_dir}"
 
     sed -i "s/@nome_do_script@/$nome_do_script/" "manpage.1"
     sed -i "s/@autor@/$nome_do_usuario/" "manpage.1"
@@ -243,14 +244,14 @@ Ex.: ./esqueleto -g dummy_script
   #
   # Param $1 e $2 = Parametros passados pro script
   # ============================================
-  function main(){
+  main(){
     while test -n "$1"
     do
       case "$1" in
 
         # mensagem de help
         -h | --help)
-          print_info "$mensagem_help"
+          _print_info "$mensagem_help"
           exit "$SUCESSO"
         ;;
 
@@ -263,7 +264,7 @@ Ex.: ./esqueleto -g dummy_script
           init
           criar_readme
           git_init
-          print_success "script $nome_do_script criado com sucesso"
+          _print_success "script $nome_do_script criado com sucesso"
           exit "$SUCESSO"
         ;;
 
@@ -273,8 +274,8 @@ Ex.: ./esqueleto -g dummy_script
           validacoes "$nome_do_script"
           pegar_autor_email_pelo_git
           init
-          createManpage
-          print_success "script $nome_do_script criado com sucesso"
+          create_manpage
+          _print_success "script $nome_do_script criado com sucesso"
           exit "$SUCESSO"
         ;;
 
@@ -288,14 +289,14 @@ Ex.: ./esqueleto -g dummy_script
 # Main - execução do script
 
   # trata interrrupção do script em casos de ctrl + c (SIGINT) e kill (SIGTERM)
-  trap exception SIGINT SIGTERM
+  trap _exception SIGINT SIGTERM
 
   # verifica se existe parametro.
   # se não existir, exibe o help.
   # se existir, chama o main
   if [ -z "$1" ]
   then
-    print_info "$mensagem_help"
+    _print_info "$mensagem_help"
     exit "$SUCESSO"
   else
     main "$1" "$2"

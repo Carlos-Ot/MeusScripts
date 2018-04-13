@@ -54,8 +54,9 @@
 # Utils - funções de utilidades
 
   # códigos de retorno
-  SUCESSO=0
-  ERRO=1
+  # [condig-style] constantes devem começar com 'readonly'
+  readonly SUCESSO=0
+  readonly ERRO=1
 
   # debug = 0, desligado
   # debug = 1, ligado
@@ -64,7 +65,7 @@
   # ============================================
   # Função pra imprimir informação
   # ============================================
-  function print_info(){
+  _print_info(){
     local amarelo="\033[33m"
     local reset="\033[m"
 
@@ -74,7 +75,7 @@
   # ============================================
   # Função pra imprimir mensagem de sucesso
   # ============================================
-  function print_success(){
+  _print_success(){
     local verde="\033[32m"
     local reset="\033[m"
 
@@ -84,7 +85,7 @@
   # ============================================
   # Função pra imprimir erros
   # ============================================
-  function print_error(){
+  _print_error(){
     local vermelho="\033[31m"
     local reset="\033[m"
 
@@ -94,14 +95,14 @@
   # ============================================
   # Função de debug
   # ============================================
-  function debug_log(){
-    [ "$debug" = 1 ] && print_info "[DEBUG] $*"
+  _debug_log(){
+    [ "$debug" = 1 ] && _print_info "[DEBUG] $*"
   }
 
   # ============================================
   # tratamento das exceções de interrupções
   # ============================================
-  function exception(){
+  _exception(){
     return "$ERRO"
   }
 
@@ -111,7 +112,7 @@
   # ============================================
   # tratamento de validacoes
   # ============================================
-  function validacoes(){
+  validacoes(){
     return "$SUCESSO"
   }
 
@@ -123,23 +124,23 @@
   # ============================================
   # Função Main
   # ============================================
-  function main(){
-    print_info "Ola, meu nome eh testando.sh"
+  main(){
+    _print_info "Ola, meu nome eh testando.sh"
     echo ""
-    print_success "imprimindo mensagem de sucesso!"
-    print_error "imprimindo mensagem de erro!"
+    _print_success "imprimindo mensagem de sucesso!"
+    _print_error "imprimindo mensagem de erro!"
     exit "$SUCESSO"
   }
 
   # ============================================
   # Função que exibe o help
   # ============================================
-  function verifyHelp(){
+  verifyHelp(){
     case "$1" in
 
       # mensagem de help
       -h | --help)
-        print_info "$mensagem_help"
+        _print_info "$mensagem_help"
         exit "$SUCESSO"
       ;;
 
@@ -150,7 +151,7 @@
 # Main - execução do script
 
   # trata interrrupção do script em casos de ctrl + c (SIGINT) e kill (SIGTERM)
-  trap exception SIGINT SIGTERM
+  trap _exception SIGINT SIGTERM
   verifyHelp "$1"
   validacoes
   main "$1"
