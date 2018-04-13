@@ -15,14 +15,12 @@
 #
 #    OPÇÕES: - opcionais
 #   -h, --help  Mostra essa mesma tela de ajuda
-#   -g, --git    Versiona o script com git
 #
 #    NOME_DO_SCRIPT - obrigatório
 #    - Nome do script a ser criado
 #
 #   Ex.: ./esqueleto -h
 #   Ex.: ./esqueleto dummy_script
-#   Ex.: ./esqueleto -g dummy_script
 #
 ################################################################################
 #
@@ -53,18 +51,19 @@ Uso: $(basename "$0") [OPÇÕES] <NOME_DO_SCRIPT>
 
 OPÇÕES: - opcionais
   -h, --help  Mostra essa mesma tela de ajuda
-  -g, --git   Versiona o script com git
 
 NOME_DO_SCRIPT - obrigatório
   - Nome do script a ser criado
 
 Ex.: ./esqueleto -h
 Ex.: ./esqueleto dummy_script
-Ex.: ./esqueleto -g dummy_script
   "
 
 ################################################################################
 # Utils - funções de utilidades
+
+  param=$1 # parametro do script
+  param="${param%.*}" # caso o usuário passe o parametro com alguma extensão, retire
 
   # códigos de retorno
   SUCESSO=0
@@ -117,19 +116,14 @@ Ex.: ./esqueleto -g dummy_script
 
   # ============================================
   # tratamento de validacoes da criação do script
+  #
+  # $1 - nome do script novo
   # ============================================
   validacoes(){
-    local script=$(echo "$1" | sed 's/\.sh//')
-
-    # se não passar nenhum parametro, dá erro
-    if [ "$script" == "" ];then
-      _print_error "# Uso: ./esqueleto <nome_do_novo_script>"
-      _print_error "# Ex.: ./esqueleto dummy_script"
-      exit "$ERRO"
-    fi
+    local nome_do_script=$1
 
     # verificando se o script já foi criado
-    if [ -d "$script" ]; then
+    if [ -d "$nome_do_script" ]; then
       _print_error "Script já existe com esse nome"
       exit "$ERRO"
     fi
@@ -145,44 +139,14 @@ Ex.: ./esqueleto -g dummy_script
   # ============================================
   pegar_autor_email_pelo_git(){
     # pegando as configurações do git para preencher o cabeçalho.
-    if [ $(which git > /dev/null; echo $?) == "0" ];then
-      email_do_usuario="$(cd ~; git config --list | grep "user.email" | cut -d "=" -f2; cd - > /dev/null)"
-      nome_do_usuario="$(cd ~; git config --list | grep "user.name" | cut -d "=" -f2; cd - > /dev/null)"
+    if type git > /dev/null 2>&1;then
+      email_do_usuario="$(git config user.email)"
+      nome_do_usuario="$(git config user.name)"
     # se não tiver git instalado ,coloque o nome do usuario corrente no script,
     # e coloque um TODO no email
     else
       nome_do_usuario=$(whoami)
       email_do_usuario="TODO: email@email.com"
-    fi
-  }
-
-  # ============================================
-  # função que cria o README.md
-  # ============================================
-  criar_readme(){
-  local readme='/modelos/README.md'
-
-  # voltando pra pasta do script
-  cd ..
-
-  # copiando o readme modelo
-  cp ${esqueleto_path}${readme} "$nome_do_diretorio"
-
-  cd "$nome_do_diretorio"
-
-  sed -i "s/%nomeDoScript%/$nome_do_script/g" README.md
-
-  }
-
-  # ============================================
-  # versionar o script com o git
-  # ============================================
-  git_init(){
-    if [ $(which git > /dev/null; echo $?) == "0" ];then
-      echo "*~" > .gitignore
-      git init > /dev/null
-      git add README.md "$nome_do_script" .gitignore
-      git commit -m "criado o esqueleto do $nome_do_script" > /dev/null
     fi
   }
 
@@ -242,12 +206,13 @@ Ex.: ./esqueleto -g dummy_script
   # ============================================
   # Função Main
   #
-  # Param $1 e $2 = Parametros passados pro script
+  # Param $1Parametros passados pro script
   # ============================================
   main(){
-    while test -n "$1"
+    local parametro=$1
+    while test -n "$parametro"
     do
-      case "$1" in
+      case "$parametro" in
 
         # mensagem de help
         -h | --help)
@@ -255,23 +220,10 @@ Ex.: ./esqueleto -g dummy_script
           exit "$SUCESSO"
         ;;
 
-        # Criando e versionando o script com git
-        -g | --git)
-          shift
-          nome_do_script="$1.sh"
-          validacoes "$nome_do_script"
-          pegar_autor_email_pelo_git
-          init
-          criar_readme
-          git_init
-          _print_success "script $nome_do_script criado com sucesso"
-          exit "$SUCESSO"
-        ;;
-
         # se passar só o nome do script como parametro, ele cria sem git
         *)
-          nome_do_script="$1.sh"
-          validacoes "$nome_do_script"
+          validacoes "$parametro"
+          nome_do_script="$parametro.sh"
           pegar_autor_email_pelo_git
           init
           create_manpage
@@ -294,10 +246,9 @@ Ex.: ./esqueleto -g dummy_script
   # verifica se existe parametro.
   # se não existir, exibe o help.
   # se existir, chama o main
-  if [ -z "$1" ]
-  then
+  if [ -z "$param" ]; then
     _print_info "$mensagem_help"
     exit "$SUCESSO"
   else
-    main "$1" "$2"
+    main "$param"
   fi
