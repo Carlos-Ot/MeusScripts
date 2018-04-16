@@ -90,6 +90,8 @@ function print_info(){
   function install_tools(){
     print_info "Instalando algumas ferramentas e utilitários..."
 
+    # [curl] - comando para fazer requests. não vem instalado por padrão
+    # [wget] - comando para fazer requests. não vem instalado por padrão
     # [gksu] - para executar o “Disk Usage Analyzer (baobab)”, usando o  “gksudo baobab”
     # [git]
     # [meld] - usado para os diffs do git
@@ -101,6 +103,8 @@ function print_info(){
     # [nautilus-open-terminal] - plugin do nautilus para abrir o terminal
 
     sudo apt-get -y install \
+    curl \
+    wget \
     gksu \
     git \
     meld \
@@ -120,7 +124,7 @@ function print_info(){
     atom-material-syntax-dark \ # Atom package to Material Design syntax dark
     atom-beautify               # Atom package to auto formatting code [with ctrl+alt+b]
 
-    # Python code that [atom-beautify] use to formatting Shell Script.
+    # Python code that use to formatting Shell Script.
     # this is necessary to [atom-beautify] works
     pip install beautysh
   }
