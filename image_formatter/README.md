@@ -1,4 +1,4 @@
-Padronizador de Diretório de Imagem
+Formatador de diretório de imagens
 ==============
 
 ## Objetivo
