@@ -2,8 +2,7 @@ Esqueleto de Script.
 ===========
 
 ## Descrição
-Script feito para gerar uma especie de casca (o esqueleto) de script, facilitando na hora da criação de um script novo.
-Nome baseado no Esqueleto do He-man =D
+Script feito para gerar um template, facilitando na hora da criação de um script novo.
 
 ## Uso
 ```
@@ -11,14 +10,10 @@ Nome baseado no Esqueleto do He-man =D
 
 OPÇÕES: - opcionais
 -h, --help	Mostra essa mesma tela de ajuda
--g, --git		Versiona o scrit com git
--p, --parser		Cria um parser com um arquivo de configuração
 
 NOME_DO_SCRIPT - obrigatório
 - Nome do script a ser criado
 
 Ex.: ./esqueleto -h
-Ex.: ./esqueleto -p
 Ex.: ./esqueleto dummy_script
-Ex.: ./esqueleto -g dummy_script
 ```
