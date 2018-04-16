@@ -5,13 +5,13 @@ Padronizador de Diretório de Imagem
 Renomear de forma padroniazda todos os arquivos de um diretório de imagem
 
 ## Uso
-Uso: `padronizador_de_diretorio_de_imagem <diretorio_de_imagem>`
+Uso: `image_formatter <diretorio_de_imagem>`
 
-Ex.: `./padronizador_de_diretorio_de_imagem $HOME/minhas-imagens/`
+Ex.: `./image_formatter $HOME/minhas-imagens/`
 
 ## Dependências
 * [**funcoeszz**](https://github.com/aureliojargas/funcoeszz) do [@oreio](https://twitter.com/oreio)
-  
+
   depende da `zzarrumanome` e `zznomefoto`
 
 ## Saída Esperada

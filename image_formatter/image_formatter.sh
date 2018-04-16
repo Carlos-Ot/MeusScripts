@@ -5,8 +5,8 @@
 # Padroniza todo o diretório de imagem, e todas as ".jpg"
 # deixando no padrão da "zzarrumanome" e "zzarrumafoto"
 #
-# Uso: padronizador_de_diretorio_de_imagem <diretorio_de_imagem>
-# Ex.: ./padronizador_de_diretorio_de_imagem $HOME/minha-imagens/
+# Uso: image_formatter <diretorio_de_imagem>
+# Ex.: ./image_formatter $HOME/minha-imagens/
 #
 # Autor: Frank <frankcbjunior (a) gmail com>
 # Desde: 2-10-2013
