@@ -195,7 +195,7 @@ java_set_default(){
 # ============================================
 # atualizando o path no /etc/profile
 # ============================================
-function update_profile(){
+update_profile(){
 	echo "" >> /etc/profile
 	echo "#------- instalação do java -------" >> /etc/profile
 	echo "JAVA_HOME=$path_java/java" >> /etc/profile
@@ -216,7 +216,6 @@ main(){
 
 	# instalando o java
 	java_install
-
 	java_set_location
 	java_set_default
 

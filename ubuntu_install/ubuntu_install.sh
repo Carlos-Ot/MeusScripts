@@ -32,8 +32,8 @@ function print_info(){
   # ============================================
   function init_updates(){
     print_info "Fazendo as atualizações iniciais..."
-    sudo apt-get -y upgrade
-    sudo apt-get -y dist-upgrade
+    sudo apt -y upgrade
+    sudo apt -y dist-upgrade
   }
 
   # ============================================
@@ -77,7 +77,7 @@ function print_info(){
   function install_dark_themes(){
     print_info "Instalando temas..."
 
-    sudo apt-get -y install \
+    sudo apt -y install \
     arc-theme \
     yosembiance-gtk-theme \
     adapta-gtk-theme \
@@ -99,10 +99,11 @@ function print_info(){
     # [zip] - pois é, não vem instalado por padrão.
     # [unity-tweak-tool] - usado para customizar a interface gráfica
     # [atom] - IDE
+    # [python-pip] - Instalador de pacotes do Python
     # [browser-plugin-vlc] - VLC
     # [nautilus-open-terminal] - plugin do nautilus para abrir o terminal
 
-    sudo apt-get -y install \
+    sudo apt -y install \
     curl \
     wget \
     gksu \
@@ -113,6 +114,7 @@ function print_info(){
     unity-tweak-tool \
     spotify-client \
     atom \
+    python-pip \
     browser-plugin-vlc \
     nautilus-open-terminal
 
@@ -123,6 +125,9 @@ function print_info(){
     atom-material-ui \          # Atom package to Material Design Theme
     atom-material-syntax-dark \ # Atom package to Material Design syntax dark
     atom-beautify               # Atom package to auto formatting code [with ctrl+alt+b]
+
+    # atualizando o python-pip
+    pip install --upgrade pip
 
     # Python code that use to formatting Shell Script.
     # this is necessary to [atom-beautify] works
@@ -138,7 +143,7 @@ function print_info(){
     # [thunderbird] - cliente de email que eu não Uso
     # [aisleriot gnome-mahjongg gnome-mines gnome-sudoku] - games nativos
 
-    sudo apt-get -y remove \
+    sudo apt -y remove \
     thunderbird \
     aisleriot gnome-mahjongg gnome-mines gnome-sudoku
   }
@@ -181,7 +186,7 @@ function print_info(){
 
   # Atualizando....
   print_info "Update..."
-  sudo apt-get update
+  sudo apt update
 
   # Dark Themes - por padrão vem comentando, caso queira, descomente
   # add_dark_themes
@@ -192,9 +197,9 @@ function print_info(){
 
   remove_unused_packages
 
-  # apt-get fix-broken
+  # apt fix-broken
   # pra consertar possíveis dependencias e pacotes quebrados
-  sudo apt-get -f -y install
+  sudo apt -f -y install
 
   # reload nautilus
   nautilus -q
