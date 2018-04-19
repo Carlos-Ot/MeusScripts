@@ -169,7 +169,7 @@ java_install(){
 	#entrando no path
 	cd $path_java
 	# extraindo todos os .tar.gz
-	tar -xzvf *.tar.gz
+	tar -xzf *.tar.gz
 	#deletando todos os tar.gz
 	rm *.tar.gz
 }
@@ -178,7 +178,7 @@ java_install(){
 # Informando ao Ubuntu aonde sua instalação do Java está localizada
 # ============================================
 java_set_location(){
-	_print_info "informando onde está sua localização padrão do java"
+	# informando onde está sua localização padrão do java
 	update-alternatives --install "/usr/bin/javac" "javac" "$path_java/$java/bin/javac" 1
 	update-alternatives --install "/usr/bin/java" "java" "$path_java/$java/bin/java" 1
 }
@@ -187,7 +187,7 @@ java_set_location(){
 # Informando ao Ubuntu que esse é a sua instalação default de Java
 # ============================================
 java_set_default(){
-	_print_info "Informando que essa é sua instalação default do java"
+	# Informando que essa é sua instalação default do java
 	update-alternatives --set "javac" "$path_java/$java/bin/javac"
 	update-alternatives --set "java" "$path_java/$java/bin/java"
 }
@@ -214,6 +214,7 @@ main(){
 	# fazendo o download do JDK
 	download_jdk
 
+  _print_info "instalando java..."
 	# instalando o java
 	java_install
 	java_set_location
