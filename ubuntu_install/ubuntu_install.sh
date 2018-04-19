@@ -15,168 +15,229 @@
 # Versão: 1
 ################################################################################
 
+
+################################################################################
+# Configurações
+# set:
+# -e: se encontrar algum erro, termina a execução imediatamente
 set -e
+
+################################################################################
+# Variáveis - todas as variáveis ficam aqui
+
+################################################################################
+# Utils - funções de utilidades
+
+# códigos de retorno
+# [condig-style] constantes devem começar com 'readonly'
+readonly SUCESSO=0
+readonly ERRO=1
+
+# debug = 0, desligado
+# debug = 1, ligado
+debug=0
 
 # ============================================
 # Função pra imprimir informação
 # ============================================
-function print_info(){
-    local amarelo="\033[33m"
-  	local reset="\033[m"
+_print_info(){
+  local amarelo="\033[33m"
+  local reset="\033[m"
 
-  	printf "${amarelo}$1${reset}\n"
-  }
+  printf "${amarelo}$1${reset}\n"
+}
 
-  # ============================================
-  # Fazendo as atualizações iniciais
-  # ============================================
-  function init_updates(){
-    print_info "Fazendo as atualizações iniciais..."
-    sudo apt -y upgrade
-    sudo apt -y dist-upgrade
-  }
+# ============================================
+# Função pra imprimir mensagem de sucesso
+# ============================================
+_print_success(){
+  local verde="\033[32m"
+  local reset="\033[m"
 
-  # ============================================
-  # adicionando repositórios dos Dark Themes
-  # ============================================
-  function add_dark_themes(){
-    print_info "Adicionando repositórios dos Dark Themes..."
-    # para instalar o Arc-Theme e o Yosembiance theme
-    sudo apt-add-repository ppa:noobslab/themes -y
+  printf "${verde}$1${reset}\n"
+}
 
-    # para o Adapta theme
-    sudo apt-add-repository ppa:tista/adapta -y
+# ============================================
+# Função pra imprimir erros
+# ============================================
+_print_error(){
+  local vermelho="\033[31m"
+  local reset="\033[m"
 
-    # pacote de icones pro Adapta theme
-    sudo apt-add-repository ppa:papirus/papirus -y
-  }
+  printf "${vermelho}[ERROR] $1${reset}\n"
+}
 
-  # ============================================
-  # adicionando repositório do Spotify
-  # ============================================
-  function add_spotify_repo(){
-    print_info "Adicionando repositório do Spotify..."
-    # 1. Add the Spotify repository signing keys to be able to verify downloaded packages
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0DF731E45CE24F27EEEB1450EFDC8610341D9410
-    # 2. Add the Spotify repository
-    echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
-  }
+# ============================================
+# Função de debug
+# ============================================
+_debug_log(){
+  [ "$debug" = 1 ] && _print_info "[DEBUG] $*"
+}
 
-  # ============================================
-  # adicionando repositório do Atom
-  # ============================================
-  function add_atom_repo(){
-    print_info "Adicionando repositório do Atom..."
-    curl -L https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
-    sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
-  }
+# ============================================
+# tratamento das exceções de interrupções
+# ============================================
+_exception(){
+  return "$ERRO"
+}
 
-  # ============================================
-  # instalação dos Dark Themes
-  # ============================================
-  function install_dark_themes(){
-    print_info "Instalando temas..."
+################################################################################
+# Validações - regras de negocio até parametros
 
-    sudo apt -y install \
-    arc-theme \
-    yosembiance-gtk-theme \
-    adapta-gtk-theme \
-    papirus-icon-theme \
-  }
+# ============================================
+# tratamento de validacoes
+# ============================================
+validacoes(){
+	return "$SUCESSO"
+}
 
-  # ============================================
-  # instala ferramentas e programas utils
-  # ============================================
-  function install_tools(){
-    print_info "Instalando algumas ferramentas e utilitários..."
+################################################################################
+# Funções do Script - funções próprias e específicas do script
 
-    # [curl] - comando para fazer requests. não vem instalado por padrão
-    # [wget] - comando para fazer requests. não vem instalado por padrão
-    # [gksu] - para executar o “Disk Usage Analyzer (baobab)”, usando o  “gksudo baobab”
-    # [git]
-    # [meld] - usado para os diffs do git
-    # [vim]
-    # [zip] - pois é, não vem instalado por padrão.
-    # [unity-tweak-tool] - usado para customizar a interface gráfica
-    # [atom] - IDE
-    # [python-pip] - Instalador de pacotes do Python
-    # [browser-plugin-vlc] - VLC
-    # [nautilus-open-terminal] - plugin do nautilus para abrir o terminal
+# ============================================
+# Fazendo as atualizações iniciais
+# ============================================
+init_updates(){
+  _print_info "Fazendo as atualizações iniciais..."
+  sudo apt -y upgrade
+  sudo apt -y dist-upgrade
+}
 
-    sudo apt -y install \
-    curl \
-    wget \
-    gksu \
-    git \
-    meld \
-    vim \
-    zip \
-    unity-tweak-tool \
-    spotify-client \
-    atom \
-    python-pip \
-    browser-plugin-vlc \
-    nautilus-open-terminal
+# ============================================
+# adicionando repositórios dos Dark Themes
+# ============================================
+add_dark_themes(){
+  _print_info "Adicionando repositórios dos Dark Themes..."
+  # para instalar o Arc-Theme e o Yosembiance theme
+  sudo apt-add-repository ppa:noobslab/themes -y
 
-    print_info "Incrementando o Atom..."
-    # Install some Atom Packages
-    apm install \
-    file-icons \                # Atom package to set specific file icons in tree
-    atom-material-ui \          # Atom package to Material Design Theme
-    atom-material-syntax-dark \ # Atom package to Material Design syntax dark
-    atom-beautify               # Atom package to auto formatting code [with ctrl+alt+b]
+  # para o Adapta theme
+  sudo apt-add-repository ppa:tista/adapta -y
 
-    # atualizando o python-pip
-    pip install --upgrade pip
+  # pacote de icones pro Adapta theme
+  sudo apt-add-repository ppa:papirus/papirus -y
+}
 
-    # Python code that use to formatting Shell Script.
-    # this is necessary to [atom-beautify] works
-    pip install beautysh
-  }
+# ============================================
+# adicionando repositório do Spotify
+# ============================================
+add_spotify_repo(){
+  _print_info "Adicionando repositório do Spotify..."
+  # 1. Add the Spotify repository signing keys to be able to verify downloaded packages
+  sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0DF731E45CE24F27EEEB1450EFDC8610341D9410
+  # 2. Add the Spotify repository
+  echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sources.list.d/spotify.list
+}
 
-  # ============================================
-  # remove pacotes que eu não uso
-  # ============================================
-  function remove_unused_packages(){
-    print_info "Removendo algumas coisas..."
+# ============================================
+# adicionando repositório do Atom
+# ============================================
+add_atom_repo(){
+  _print_info "Adicionando repositório do Atom..."
+  curl -L https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
+  sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
+}
 
-    # [thunderbird] - cliente de email que eu não Uso
-    # [aisleriot gnome-mahjongg gnome-mines gnome-sudoku] - games nativos
+# ============================================
+# instalação dos Dark Themes
+# ============================================
+install_dark_themes(){
+  _print_info "Instalando temas..."
 
-    sudo apt -y remove \
-    thunderbird \
-    aisleriot gnome-mahjongg gnome-mines gnome-sudoku
-  }
+  sudo apt -y install \
+  arc-theme \
+  yosembiance-gtk-theme \
+  adapta-gtk-theme \
+  papirus-icon-theme
+}
 
-  # ============================================
-  # instalando o Dropbox
-  # ============================================
-  function install_dropbox(){
-    # olhe: https://www.dropbox.com/install-linux
-    print_info "======= Baixando O Dropbox ======="
+# ============================================
+# instala ferramentas e programas utils
+# ============================================
+install_tools(){
+  _print_info "Instalando algumas ferramentas e utilitários..."
 
-    cd ~ && wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
+  # [curl] - comando para fazer requests. não vem instalado por padrão
+  # [wget] - comando para fazer requests. não vem instalado por padrão
+  # [gksu] - para executar o “Disk Usage Analyzer (baobab)”, usando o  “gksudo baobab”
+  # [git]
+  # [meld] - usado para os diffs do git
+  # [vim]
+  # [zip] - pois é, não vem instalado por padrão.
+  # [unity-tweak-tool] - usado para customizar a interface gráfica
+  # [atom] - IDE
+  # [python-pip] - Instalador de pacotes do Python
+  # [browser-plugin-vlc] - VLC
+  # [nautilus-open-terminal] - plugin do nautilus para abrir o terminal
 
-    dropboxFile='[Desktop Entry]
-    Type=Application
-    Exec=/home/@user@/.dropbox-dist/dropboxd
-    Hidden=false
-    NoDisplay=false
-    X-GNOME-Autostart-enabled=true
-    Name[en_US]=Dropbox
-    Name=Dropbox
-    Comment[en_US]=
-    Comment=
-    '
-    dropboxFile=$(echo "$dropboxFile" | sed "s/@user@/$USER/")
+  sudo apt -y install \
+  curl \
+  wget \
+  gksu \
+  git \
+  meld \
+  vim \
+  zip \
+  unity-tweak-tool \
+  spotify-client \
+  atom \
+  python-pip \
+  browser-plugin-vlc
 
-    echo "$dropboxFile" > ~/.config/autostart/dropbox.desktop
-  }
+  _print_info "Incrementando o Atom..."
+  # Install some Atom Packages
+  apm install file-icons                  # Atom package to set specific file icons in tree
+  apm install atom-material-ui            # Atom package to Material Design Theme
+  apm install atom-material-syntax-dark   # Atom package to Material Design syntax dark
+  apm install atom-beautify               # Atom package to auto formatting code [with ctrl+alt+b]
 
+  # Python code that use to formatting Shell Script.
+  # this is necessary to [atom-beautify] works
+  # pip install beautysh
+}
 
+# ============================================
+# remove pacotes que eu não uso
+# ============================================
+remove_unused_packages(){
+  _print_info "Removendo algumas coisas..."
 
+  # [thunderbird] - cliente de email que eu não Uso
+  # [aisleriot gnome-mahjongg gnome-mines gnome-sudoku] - games nativos
 
-# ------------------------------ MAIN ------------------------------
+  sudo apt -y remove \
+  aisleriot gnome-mahjongg gnome-mines gnome-sudoku
+}
+
+# ============================================
+# instalando o Dropbox
+# ============================================
+install_dropbox(){
+  # olhe: https://www.dropbox.com/install-linux
+  _print_info "======= Baixando O Dropbox ======="
+
+  cd ~ && wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
+
+  dropboxFile='[Desktop Entry]
+  Type=Application
+  Exec=/home/@user@/.dropbox-dist/dropboxd
+  Hidden=false
+  NoDisplay=false
+  X-GNOME-Autostart-enabled=true
+  Name[en_US]=Dropbox
+  Name=Dropbox
+  Comment[en_US]=
+  Comment=
+  '
+  dropboxFile=$(echo "$dropboxFile" | sed "s/@user@/$USER/")
+
+  echo "$dropboxFile" > ~/.config/autostart/dropbox.desktop
+}
+
+# ============================================
+# Função Main
+# ============================================
+main(){
   # updagrade inicial, por volta de uns 300 MB
   init_updates
 
@@ -185,7 +246,7 @@ function print_info(){
   add_atom_repo
 
   # Atualizando....
-  print_info "Update..."
+  _print_info "Update..."
   sudo apt update
 
   # Dark Themes - por padrão vem comentando, caso queira, descomente
@@ -209,3 +270,16 @@ function print_info(){
   # reiniciando o computador
   print_info "Reiniciando o computador..."
   sudo shutdown -r now
+}
+
+################################################################################
+# Main - execução do script
+
+# trata interrrupção do script em casos de ctrl + c (SIGINT) e kill (SIGTERM)
+trap _exception SIGINT SIGTERM
+
+validacoes
+main
+
+################################################################################
+# FIM do Script =D
