@@ -6,7 +6,7 @@
 #
 ################################################################################
 # Uso:
-# 	./java_install.sh
+# sudo ./java_install.sh
 #
 ################################################################################
 # Autor: Frank Junior <frankcbjunior@gmail.com>
@@ -97,7 +97,11 @@ _exception(){
 # tratamento de validacoes
 # ============================================
 validacoes(){
-	return "$SUCESSO"
+  # verifica se o script foi rodado com sudo
+	if [ ! $(id -u) -eq 0 ];then
+		_print_error "rode o script com sudo"
+		exit "$ERRO"
+  fi
 }
 
 ################################################################################
