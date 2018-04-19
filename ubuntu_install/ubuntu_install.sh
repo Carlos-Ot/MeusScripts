@@ -244,14 +244,14 @@ main(){
   # Adicionando repositórios
   add_spotify_repo
   add_atom_repo
+  add_dark_themes
 
   # Atualizando....
   _print_info "Update..."
   sudo apt update
 
-  # Dark Themes - por padrão vem comentando, caso queira, descomente
-  # add_dark_themes
-  # install_dark_themes
+  # Dark Themes
+  install_dark_themes
 
   # Baixando algumas ferramentas e utilitários
   install_tools
