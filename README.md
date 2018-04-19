@@ -9,8 +9,6 @@ Scripts simples, de uso próprio.
 
 Os scrips são:
 
-- [Instalador da JDK](https://github.com/frankjuniorr/MeusScripts/tree/master/instalador_da_jdk) - Script pra Linux, para instalar a JDK baixada do site da Oracle, passando o .tar.gz por parametro.
-
 - [Monitor do Sistemas](https://github.com/frankjuniorr/MeusScripts/tree/master/monitor_do_sistema) - Monitor simples do sistema, mostrando algumas informações sobre o S.O.
 
 - [Padronizador de Diretório de Imagem](https://github.com/frankjuniorr/MeusScripts/tree/master/image_formatter) - Renomear de forma padroniazda todos os arquivos de um diretório de imagem
