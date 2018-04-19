@@ -168,7 +168,7 @@ install_tools(){
   # [atom] - IDE
   # [python-pip] - Instalador de pacotes do Python
   # [browser-plugin-vlc] - VLC
-  # [nautilus-open-terminal] - plugin do nautilus para abrir o terminal
+  # [ubuntu-restricted-extras] - pacotes extras do Ubuntu: mp3 codec, font tts da Microsoft....
 
   sudo apt -y install \
   curl \
@@ -182,7 +182,8 @@ install_tools(){
   spotify-client \
   atom \
   python-pip \
-  browser-plugin-vlc
+  browser-plugin-vlc \
+  ubuntu-restricted-extras
 
   _print_info "Incrementando o Atom..."
   # Install some Atom Packages
