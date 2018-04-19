@@ -29,7 +29,7 @@ set -e
 readonly ORACLE_URL="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html"
 
 # path onde o java será instalado
-path_java="/usr/lib/jvm"
+java_location="/usr/lib/jvm"
 
 # pacote .tar.gz
 jdk_tar_gz=""
@@ -146,10 +146,10 @@ download_jdk(){
 # ============================================
 # criando o diretório onde será instalado o jdk
 # ============================================
-create_path(){
-	if [ ! -d $path_java ]; then
-		_print_info "criando diretório java em $path_java"
-		mkdir -p $path_java
+_java_install_location(){
+	if [ ! -d $java_location ]; then
+		_print_info "criando diretório java em $java_location"
+		mkdir -p $java_location
 	fi
 }
 
@@ -158,16 +158,16 @@ create_path(){
 # ============================================
 java_install(){
 	# criando o diretório onde o java será instalado
-	create_path
+	_java_install_location
 
 	# pegando o nome do diretorio que o tar.gz vai extrair
 	java=$(tar -tf $jdk_tar_gz | cut -d "/" -f1 | uniq)
 
 	# movendo o tar.gz para o diretorio de instalação do java
-	mv $jdk_tar_gz $path_java
+	mv $jdk_tar_gz $java_location
 
 	#entrando no path
-	cd $path_java
+	cd $java_location
 	# extraindo todos os .tar.gz
 	tar -xzf *.tar.gz
 	#deletando todos os tar.gz
@@ -179,8 +179,8 @@ java_install(){
 # ============================================
 java_set_location(){
 	# informando onde está sua localização padrão do java
-	update-alternatives --install "/usr/bin/javac" "javac" "$path_java/$java/bin/javac" 1
-	update-alternatives --install "/usr/bin/java" "java" "$path_java/$java/bin/java" 1
+	update-alternatives --install "/usr/bin/javac" "javac" "$java_location/$java/bin/javac" 1
+	update-alternatives --install "/usr/bin/java" "java" "$java_location/$java/bin/java" 1
 }
 
 # ============================================
@@ -188,17 +188,17 @@ java_set_location(){
 # ============================================
 java_set_default(){
 	# Informando que essa é sua instalação default do java
-	update-alternatives --set "javac" "$path_java/$java/bin/javac"
-	update-alternatives --set "java" "$path_java/$java/bin/java"
+	update-alternatives --set "javac" "$java_location/$java/bin/javac"
+	update-alternatives --set "java" "$java_location/$java/bin/java"
 }
 
 # ============================================
 # atualizando o path no $HOME/.bashrc
 # ============================================
-update_profile(){
+update_path(){
 	echo "" >> $HOME/.bashrc
 	echo "#------- instalação do java -------" >> $HOME/.bashrc
-	echo "JAVA_HOME=$path_java/java" >> $HOME/.bashrc
+	echo "JAVA_HOME=$java_location/java" >> $HOME/.bashrc
 	echo 'PATH=$PATH:$JAVA_HOME/bin' >> $HOME/.bashrc
 	echo 'export JAVA_HOME' >> $HOME/.bashrc
 	echo 'export PATH' >> $HOME/.bashrc
@@ -220,7 +220,7 @@ main(){
 	java_set_location
 	java_set_default
 
-	update_profile
+	update_path
 
 	_print_info "JDK instalado com sucesso"
 }
