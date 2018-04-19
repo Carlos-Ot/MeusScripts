@@ -193,18 +193,18 @@ java_set_default(){
 }
 
 # ============================================
-# atualizando o path no /etc/profile
+# atualizando o path no $HOME/.bashrc
 # ============================================
 update_profile(){
-	echo "" >> /etc/profile
-	echo "#------- instalação do java -------" >> /etc/profile
-	echo "JAVA_HOME=$path_java/java" >> /etc/profile
-	echo 'PATH=$PATH:$JAVA_HOME/bin' >> /etc/profile
-	echo 'export JAVA_HOME' >> /etc/profile
-	echo 'export PATH' >> /etc/profile
+	echo "" >> $HOME/.bashrc
+	echo "#------- instalação do java -------" >> $HOME/.bashrc
+	echo "JAVA_HOME=$path_java/java" >> $HOME/.bashrc
+	echo 'PATH=$PATH:$JAVA_HOME/bin' >> $HOME/.bashrc
+	echo 'export JAVA_HOME' >> $HOME/.bashrc
+	echo 'export PATH' >> $HOME/.bashrc
 
-	#reload no /etc/profile
-	. /etc/profile
+	#reload no $HOME/.bashrc
+	source $HOME/.bashrc
 }
 
 # ============================================
