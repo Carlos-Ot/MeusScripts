@@ -235,6 +235,20 @@ install_dropbox(){
 }
 
 # ============================================
+# mostrar o banner inicial
+# ============================================
+show_header(){
+cat << "EOF"
+   __  ____                __           ____           __        ____
+  / / / / /_  __  ______  / /___  __   /  _/___  _____/ /_____ _/ / /
+ / / / / __ \/ / / / __ \/ __/ / / /   / // __ \/ ___/ __/ __ `/ / /
+/ /_/ / /_/ / /_/ / / / / /_/ /_/ /  _/ // / / (__  ) /_/ /_/ / / /
+\____/_.___/\__,_/_/ /_/\__/\__,_/  /___/_/ /_/____/\__/\__,_/_/_/
+
+EOF
+}
+
+# ============================================
 # Função Main
 # ============================================
 main(){
@@ -262,9 +276,6 @@ main(){
   # pra consertar possíveis dependencias e pacotes quebrados
   sudo apt -f -y install
 
-  # reload nautilus
-  nautilus -q
-
   install_dropbox
 
   # reiniciando o computador
@@ -279,6 +290,7 @@ main(){
 trap _exception SIGINT SIGTERM
 
 validacoes
+show_header
 main
 
 ################################################################################
