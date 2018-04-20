@@ -159,7 +159,7 @@
     sudo apt install nodejs npm
 
     # instalando Java8 através do instalador
-    ./java_install.sh
+    sudo ./java_install.sh
 
     android_studio_install
   }
