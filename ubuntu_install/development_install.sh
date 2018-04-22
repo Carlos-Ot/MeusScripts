@@ -29,7 +29,7 @@
 ################################################################################
 # Variáveis - todas as variáveis ficam aqui
 
-# as variaveis ficam aqui...
+readonly ANDROID_STUDIO_FOLDER="$HOME/android_ambiente"
 
   # mensagem de help
     nome_do_script=$(basename "$0")
@@ -66,10 +66,20 @@
   # Função pra imprimir informação
   # ============================================
   _print_info(){
-    local amarelo="\033[33m"
-    local reset="\033[m"
+    local text_yellow="$(tput setaf 3 2>/dev/null || echo '\e[0;33m')"
+    local text_reset="$(tput sgr 0 2>/dev/null || echo '\e[0m')"
 
-    printf "${amarelo}$1${reset}\n"
+    printf "${text_yellow}$1${text_reset}\n"
+  }
+
+  # ============================================
+  # Função pra imprimir mensagem de titulo
+  # ============================================
+  _print_title(){
+    local text_cyan="$(tput setaf 6 2>/dev/null || echo '\e[0;36m')"
+    local text_reset="$(tput sgr 0 2>/dev/null || echo '\e[0m')"
+
+    printf "${text_cyan}$1${text_reset}\n"
   }
 
   # ============================================
@@ -123,10 +133,15 @@
 # Instala o Android Studio
 # ============================================
   android_studio_install(){
-    _print_info "Instalando o Android Studio..."
+    local android_studio_zip=''
+
+    _print_title "==========================================="
+    _print_title "\tInstalação do Android Studio"
+    _print_title "==========================================="
 
     # libs necessárias para a instalação do Android Studio
-    sudo apt install libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386
+    _print_info "instalando dependencias..."
+    sudo apt install -y libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386
 
     # 1. baixando o html do site de download do Android developer
     # 2. grep [-m 1] busca pela 1º ocorrência
@@ -140,23 +155,46 @@
      cut -d "=" -f2 |\
      sed 's/\"//g')
 
+     android_studio_zip=$(basename "$link_download")
+
      # fazendo download do arquivo zip do Android Studio
+     _print_info "fazendo download..."
      wget --no-check-certificate --no-cookies --header \
      "Cookie: oraclelicense=accept-securebackup-cookie" "$link_download"
 
-     #TODO extrair do zip
-     #+ colocar no diretório correto (~/android_ambiente/android_studio)
-     #+ executar o script studio.sh
+     _print_info "instalando..."
+
+     # criando o diretório caso exista
+     if [ ! -d "$ANDROID_STUDIO_FOLDER" ];then
+       mkdir "$ANDROID_STUDIO_FOLDER"
+     fi
+
+     # movendo para o diretório correto
+     mv "$android_studio_zip" "$ANDROID_STUDIO_FOLDER"
+     # entrando no diretório
+     cd "$ANDROID_STUDIO_FOLDER"
+     # extraindo o zip
+     _print_info "extraindo..."
+     unzip -q "$android_studio_zip"
+     # deletando o zip
+     rm "$android_studio_zip"
+
+     _print_info "executando..."
+     ./android-studio/bin/studio.sh
+
+     cd - > /dev/null
   }
 
   # ============================================
   # Função Main
   # ============================================
   main(){
+    _print_info "Atualizando repositórios..."
     sudo apt update
 
     # instalando o Node
-    sudo apt install nodejs npm
+    _print_info "Instalando o NodeJs..."
+    sudo apt install -y nodejs npm
 
     # instalando Java8 através do instalador
     sudo ./java_install.sh
