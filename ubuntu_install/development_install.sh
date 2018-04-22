@@ -181,8 +181,6 @@ readonly ANDROID_STUDIO_FOLDER="$HOME/android_ambiente"
 
      _print_info "executando..."
      ./android-studio/bin/studio.sh
-
-     cd - > /dev/null
   }
 
   # ============================================
