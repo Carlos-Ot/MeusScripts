@@ -152,6 +152,28 @@ install_dark_themes(){
 }
 
 # ============================================
+# Instala o Telegram Desktop
+# ============================================
+install_telegram(){
+  _print_info "Instalando Telegram Desktop..."
+  # fazendo donwload do Telegram
+  wget https://telegram.org/dl/desktop/linux
+  # Dessa forma de cima, o donwload vai ser feito com um arquivo sem extensão
+  # chamado de 'linux'. Com isso é preciso renomear ele pra um arquivo .tar.xz.
+  # nesse caso, eu já estou movendo o arquivo pro $HOME
+  mv "linux" "$HOME/telegram.tar.xz"
+  cd ~ > /dev/null
+  # extraindo o arquivo compactado
+  tar -xf telegram.tar.xz
+  # deletando o arquivo
+  rm telegram.tar.xz
+  cd - > /dev/null
+
+  _print_success "O Telegram foi instalado em $HOME/Telegram"
+
+}
+
+# ============================================
 # instala ferramentas e programas utils
 # ============================================
 install_tools(){
@@ -195,6 +217,8 @@ install_tools(){
   # Python code that use to formatting Shell Script.
   # this is necessary to [atom-beautify] works
   # pip install beautysh
+
+  install_telegram
 }
 
 # ============================================
