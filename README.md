@@ -9,15 +9,17 @@ Scripts simples, de uso próprio.
 
 Os scrips são:
 
-- [Monitor do Sistemas](https://github.com/frankjuniorr/MeusScripts/tree/master/monitor_do_sistema) - Monitor simples do sistema, mostrando algumas informações sobre o S.O.
+- [monitor do Sistemas](https://github.com/frankjuniorr/MeusScripts/tree/master/monitor_do_sistema) - Monitor simples do sistema, mostrando algumas informações sobre o S.O.
 
-- [Padronizador de Diretório de Imagem](https://github.com/frankjuniorr/MeusScripts/tree/master/image_formatter) - Renomear de forma padroniazda todos os arquivos de um diretório de imagem
+- [convert_mp3_to_wav](https://github.com/frankjuniorr/MeusScripts/tree/master/convert_mp3_to_wav) - Convert music files in .mp3 to .wav, to prepare music files to upload in oneRPM.
 
-- [Parser XML para JSON](https://github.com/frankjuniorr/MeusScripts/tree/master/parser_xml_to_json) - Script que fazer um parser de um .xml para .json, mas baseado nos .xml dos [dados abertos do Recife](http://dados.recife.pe.gov.br/)
+- [image Formatter](https://github.com/frankjuniorr/MeusScripts/tree/master/image_formatter) - Renomear de forma padroniazda todos os arquivos de um diretório de imagem
 
-- [Esqueleto](https://github.com/frankjuniorr/MeusScripts/tree/master/esqueleto) - Script feito para gerar uma especie de casca de script, facilitando na hora da criação de um script novo
+- [parser XML para JSON](https://github.com/frankjuniorr/MeusScripts/tree/master/parser_xml_to_json) - Script que fazer um parser de um .xml para .json, mas baseado nos .xml dos [dados abertos do Recife](http://dados.recife.pe.gov.br/)
 
-- [Check_music_file_format](https://github.com/frankjuniorr/MeusScripts/tree/master/check_music_file_format) - Script feito para checkar o formato de nomeclatura de toda a pasta de música
+- [esqueleto](https://github.com/frankjuniorr/MeusScripts/tree/master/esqueleto) - Script feito para gerar uma especie de casca de script, facilitando na hora da criação de um script novo
+
+- [check_music_file_format](https://github.com/frankjuniorr/MeusScripts/tree/master/check_music_file_format) - Script feito para checkar o formato de nomeclatura de toda a pasta de música
 
 - [music_formatter](https://github.com/frankjuniorr/MeusScripts/tree/master/music_formatter) - Script usado pra consertar tags ID3 de arquivos MP3. Ele escreve as tags, e cria uma estrutura de diretório própria. De acordo com as seguintes padrão de nomeclatura:
 
