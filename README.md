@@ -11,7 +11,7 @@ Os scrips são:
 
 - [monitor do Sistemas](https://github.com/frankjuniorr/MeusScripts/tree/master/monitor_do_sistema) - Monitor simples do sistema, mostrando algumas informações sobre o S.O.
 
-- [convert_mp3_to_wav](https://github.com/frankjuniorr/MeusScripts/tree/master/convert_mp3_to_wav) - Convert music files in .mp3 to .wav, to prepare music files to upload in oneRPM.
+- [onerpm_build_files](https://github.com/frankjuniorr/MeusScripts/tree/master/onerpm_build_files) - Convert music files in .mp3 to .wav, to prepare music files to upload in oneRPM.
 
 - [image Formatter](https://github.com/frankjuniorr/MeusScripts/tree/master/image_formatter) - Renomear de forma padroniazda todos os arquivos de um diretório de imagem
 
