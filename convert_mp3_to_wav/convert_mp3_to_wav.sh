@@ -158,7 +158,12 @@ Ex.: ./$nome_do_script /path/do/disco
       # Expanção de variável, retira a extensão do arquivo de mp3
       local musica_wav="${disco}/wav/$(basename "${musica%.mp3}")"
 
-      ffmpeg -loglevel panic -i "$musica" -acodec pcm_u8 -ar 22050 "$musica_wav".wav > /dev/null
+      # ffmpeg parameters:
+      # [-i] input file
+      # [-acodec pcm_s16le] 16 bits little endian
+      # [-ar 44100] a sample rate of 44100 Hz
+      # [-ac 2] 2 channels (stereo)
+      ffmpeg -loglevel panic -i "$musica" -acodec pcm_s16le -ar 44100 -ac 2 "$musica_wav".wav
     done
     print_info "pronto!"
   }
