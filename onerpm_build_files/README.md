@@ -15,9 +15,9 @@ So, this script convert all .mp3 files in .wav files with 44100 sample rate, and
 ## Use
 ```console
 # Download
-curl -L https://raw.githubusercontent.com/frankjuniorr/MeusScripts/master/convert_mp3_to_wav/convert_mp3_to_wav.sh > convert_mp3_to_wav.sh
-chmod +x convert_mp3_to_wav.sh
+curl -L https://raw.githubusercontent.com/frankjuniorr/MeusScripts/master/onerpm_build_files/onerpm_build_files.sh > onerpm_build_files.sh
+chmod +x onerpm_build_files.sh
 
 # execute
-./convert_mp3_to_wav /path/of/disc
+./onerpm_build_files.sh /path/of/disc
 ```
