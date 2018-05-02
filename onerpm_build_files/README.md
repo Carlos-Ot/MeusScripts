@@ -1,17 +1,18 @@
-Convert MP3 to WAV.
+OneRPM build files.
 ===========
 
-[![tool](https://img.shields.io/badge/tool-ffmpeg-brightgreen.svg)](https://img.shields.io/badge/tool-ffmpeg-brightgreen.svg)
-[![so](https://img.shields.io/badge/OS-Linux-brightgreen.svg)](https://img.shields.io/badge/OS-Linux-brightgreen.svg)
+[![ffmpeg](https://img.shields.io/badge/dependence-ffmpeg-brightgreen.svg)](https://www.ffmpeg.org/)
+[![imagemagick](https://img.shields.io/badge/dependence-imagemagick-brightgreen.svg)](https://www.imagemagick.org/script/index.php)
+[![so](https://img.shields.io/badge/OS-Linux-blue.svg)](https://img.shields.io/badge/OS-Linux-blue.svg)
 
-## Descrição
-Convert music files in .mp3 to .wav, to prepare music files to upload in [oneRPM](https://www.onerpm.com/).
+## Description
+Prepare files to upload in [oneRPM](https://www.onerpm.com/).
 
-OneRPM need a file music master (that song that was recorded in the studio) with 44100 Hz of sample rate.
+OneRPM need a file music master (that song that was recorded in the studio) with 44100 Hz of sample rate and a album cover art in 1400x1400 px.
 
-This script was written in Shell for Linux and use [ffmpeg](https://www.ffmpeg.org/) as tool to convert files. The script convert all files .mp3 in a directory and create a new directory call 'wav' with all files .wav inside.
+So, this script convert all .mp3 files in .wav files with 44100 sample rate, and convert .jpg or .png images in 1400x1400 px images. After that, copy all files in a directory `onerpm_files`
 
-## Uso
+## Use
 ```console
 # Download
 curl -L https://raw.githubusercontent.com/frankjuniorr/MeusScripts/master/convert_mp3_to_wav/convert_mp3_to_wav.sh > convert_mp3_to_wav.sh
