@@ -3,12 +3,16 @@
   # Cabeçalho
   # ----------------------------------------------------------------------------
   # Descrição:
-  #    Script para convertes arquivos de mp3 para wav.
+  #    Script para preparar os arquivos para distribuir no OneRPM
+  #
+  # Funcionalidade:
+  #    1. converte arquivos .mp3 para .wav com 44100 sample rate
+  #    2. converte a imagem da capa do disco para 1400x1400 px
   #
   # ----------------------------------------------------------------------------
   # Uso:
-  #    ./convert_mp3_to_wav -h
-  #    ./convert_mp3_to_wav /path/do/disco
+  #    ./onerpm_build_files -h
+  #    ./onerpm_build_files /path/do/disco
   # ----------------------------------------------------------------------------
   # Autor: Frank Junior <fcbj@cesar.org.br>
   # Desde: 26-02-2018
@@ -18,6 +22,9 @@
   # Dependências:
   # ffmpeg --> utilitário de vídeo/audio converter
   # instalação: 'sudo apt-get install ffmpeg'
+  #
+  # imagemagick --> utilitário de vídeo/audio converter
+  # instalação: 'sudo apt-get install imagemagick'
   # ----------------------------------------------------------------------------
 
 
@@ -32,6 +39,7 @@
   # ----------------------------------------------------------------------------
 
   disco=$1
+  directory_name='onerpm_files'
 
 # mensagem de help
   nome_do_script=$(basename "$0")
@@ -122,6 +130,13 @@ Ex.: ./$nome_do_script /path/do/disco
       clear
     fi
 
+    # instalando o imagemagick caso não tenha instalado
+    if ! type convert > /dev/null 2>&1; then
+      echo "++++ instalando o imagemagick: ++++"
+      sudo apt-get install -y imagemagick:
+      clear
+    fi
+
   }
 
   # ============================================
@@ -145,27 +160,40 @@ Ex.: ./$nome_do_script /path/do/disco
   function convert_files(){
 
     # se já existir a pasta 'wav', delete ela.
-    if [ -d "$disco"/wav ];then
-      rm -rf "$disco"/wav
+    if [ -d "$disco"/${directory_name} ];then
+      rm -rf "$disco"/${directory_name}
     fi
 
     # criando a pasta wav
-    mkdir "$disco"/wav
+    mkdir "$disco"/${directory_name}
 
-    print_info "convertendo os arquivos..."
+    print_info "converting music files..."
     for musica in "$disco"/*.mp3 ; do
 
       # Expanção de variável, retira a extensão do arquivo de mp3
-      local musica_wav="${disco}/wav/$(basename "${musica%.mp3}")"
+      local musica_wav="${disco}/${directory_name}/$(basename "${musica%.mp3}")"
 
       # ffmpeg parameters:
+      # [-loglevel panic] só exibe saída no STDOUT para erros tipo "panic"
       # [-i] input file
       # [-acodec pcm_s16le] 16 bits little endian
       # [-ar 44100] a sample rate of 44100 Hz
       # [-ac 2] 2 channels (stereo)
       ffmpeg -loglevel panic -i "$musica" -acodec pcm_s16le -ar 44100 -ac 2 "$musica_wav".wav
     done
-    print_info "pronto!"
+
+    print_info "creating album cover..."
+    for cover in "$disco"/*.{jpg,png} ; do
+      if [ -f $cover ];then
+        local onerpm_cover="onerpm_cover_$(basename $cover)"
+
+        # convert image to 1400x1400 px
+        # this image size is needed to upload in oneRPM
+        convert $cover -resize 1400x1400! $onerpm_cover
+        mv $onerpm_cover $directory_name
+      fi
+    done
+    print_info "Done!"
   }
 
   # ============================================
