@@ -189,7 +189,7 @@ Ex.: ./$nome_do_script /path/do/disco
 
         # convert image to 1400x1400 px
         # this image size is needed to upload in oneRPM
-        convert $cover -resize 1400x1400! $onerpm_cover
+        convert $cover -resize 1400x1400! -density 300 $onerpm_cover
         mv $onerpm_cover $directory_name
       fi
     done
