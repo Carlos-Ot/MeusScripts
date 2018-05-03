@@ -13,11 +13,11 @@ OneRPM need a file music master (that song that was recorded in the studio) with
 So, this script convert all .mp3 files in .wav files with 44100 sample rate, and convert .jpg or .png images in 1400x1400 px images. After that, copy all files in a directory `onerpm_files`
 
 ## Use
-```console
+```bash
 # Download
 curl -LJO https://raw.githubusercontent.com/frankjuniorr/MeusScripts/master/onerpm_build_files/onerpm_build_files.sh
 chmod +x onerpm_build_files.sh
 
-# execute
+# Run
 ./onerpm_build_files.sh /path/of/disc
 ```
