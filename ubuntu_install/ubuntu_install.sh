@@ -98,6 +98,7 @@ validacoes(){
 # ============================================
 init_updates(){
   _print_info "Fazendo as atualizações iniciais..."
+  sudo apt -y update
   sudo apt -y upgrade
   sudo apt -y dist-upgrade
 }
@@ -266,6 +267,19 @@ install_dropbox(){
 }
 
 # ============================================
+# limpa dependencias
+# ============================================
+clean_dependencies(){
+  # apt fix-broken
+  # pra consertar possíveis dependencias e pacotes quebrados
+  sudo apt -f -y install
+  # remover pacotes não mais utilizados
+  sudo apt-get autoremove -y
+  # deletar os pacotes .deb em '/var/cache/apt/archives/'
+  sudo apt-get clean -y
+}
+
+# ============================================
 # mostrar o banner inicial
 # ============================================
 show_header(){
@@ -307,9 +321,7 @@ main(){
   # Baixando algumas ferramentas e utilitários
   install_tools
 
-  # apt fix-broken
-  # pra consertar possíveis dependencias e pacotes quebrados
-  sudo apt -f -y install
+  clean_dependencies
 
   install_dropbox
 
