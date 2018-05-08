@@ -313,6 +313,9 @@ main(){
 
   install_dropbox
 
+  # descomente essa linha para instalar os pacotes de dev também.
+  # ./development_install.sh
+
   # reiniciando o computador
   print_info "Reiniciando o computador..."
   sudo shutdown -r now
