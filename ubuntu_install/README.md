@@ -16,6 +16,8 @@ install configs more generics like:
 - some tools like: git, vim, meld, curl, wget and others stuffs
 - telegram desktop
 - dropbox
+- LibreOffice
+- Transmission
 
 ### development_install.sh
 install development environment

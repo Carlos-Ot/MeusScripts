@@ -141,7 +141,16 @@ add_atom_repo(){
 # adicionando repositório do LibreOffice
 # ============================================
 add_libreOffice_repo(){
-  sudo add-apt-repository ppa:libreoffice/ppa
+  _print_info "Adicionando repositório do LibreOffice..."
+  sudo add-apt-repository ppa:libreoffice/ppa -y
+}
+
+# ============================================
+# adicionando repositório do Transmission
+# ============================================
+add_transmission_repo(){
+  _print_info "Adicionando repositório do Transmission..."
+  sudo add-apt-repository ppa:transmissionbt/ppa -y
 }
 
 # ============================================
@@ -155,14 +164,6 @@ install_dark_themes(){
   yosembiance-gtk-theme \
   adapta-gtk-theme \
   papirus-icon-theme
-}
-
-# ============================================
-# instalação do LibreOffice
-# ============================================
-install_libreOffice(){
-  _print_info "Instalando LibreOffice..."
-  sudo apt install -y libreoffice-gtk2 libreoffice-gnome
 }
 
 # ============================================
@@ -200,6 +201,8 @@ install_tools(){
   # [meld] - usado para os diffs do git
   # [vim]
   # [zip] - pois é, não vem instalado por padrão.
+  # [transmission] - torrent client
+  # [libreOffice] - packages about LibreOffice
   # [unity-tweak-tool] - usado para customizar a interface gráfica
   # [atom] - IDE
   # [python-pip] - Instalador de pacotes do Python
@@ -214,6 +217,8 @@ install_tools(){
   meld \
   vim \
   zip \
+  transmission \
+  libreoffice-gtk2 libreoffice-gnome \
   unity-tweak-tool \
   spotify-client \
   atom \
@@ -233,7 +238,6 @@ install_tools(){
   # pip install beautysh
 
   install_telegram
-  install_libreOffice
 }
 
 # ============================================
@@ -282,11 +286,16 @@ main(){
   # updagrade inicial, por volta de uns 300 MB
   init_updates
 
-  # Adicionando repositórios
+  _print_info "------------------------------"
+  _print_info "Adicionando repositórios"
+  _print_info "------------------------------"
+  echo ""
+
   add_spotify_repo
   add_atom_repo
   add_dark_themes
   add_libreOffice_repo
+  add_transmission_repo
 
   # Atualizando....
   _print_info "Update..."
