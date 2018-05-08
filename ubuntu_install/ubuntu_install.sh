@@ -2,8 +2,7 @@
 
 ################################################################################
 # Descrição:
-#   Script para configurações iniciais Linux.
-#   Ideal para um computador recém-formatado
+#   Script to initial configs to Ubuntu 18.04 Minimal Installation.
 #
 ################################################################################
 # Uso:
@@ -139,6 +138,13 @@ add_atom_repo(){
 }
 
 # ============================================
+# adicionando repositório do LibreOffice
+# ============================================
+add_libreOffice_repo(){
+  sudo add-apt-repository ppa:libreoffice/ppa
+}
+
+# ============================================
 # instalação dos Dark Themes
 # ============================================
 install_dark_themes(){
@@ -149,6 +155,14 @@ install_dark_themes(){
   yosembiance-gtk-theme \
   adapta-gtk-theme \
   papirus-icon-theme
+}
+
+# ============================================
+# instalação do LibreOffice
+# ============================================
+install_libreOffice(){
+  _print_info "Instalando LibreOffice..."
+  sudo apt install -y libreoffice-gtk2 libreoffice-gnome
 }
 
 # ============================================
@@ -219,19 +233,7 @@ install_tools(){
   # pip install beautysh
 
   install_telegram
-}
-
-# ============================================
-# remove pacotes que eu não uso
-# ============================================
-remove_unused_packages(){
-  _print_info "Removendo algumas coisas..."
-
-  # [thunderbird] - cliente de email que eu não Uso
-  # [aisleriot gnome-mahjongg gnome-mines gnome-sudoku] - games nativos
-
-  sudo apt -y remove \
-  aisleriot gnome-mahjongg gnome-mines gnome-sudoku
+  install_libreOffice
 }
 
 # ============================================
@@ -284,6 +286,7 @@ main(){
   add_spotify_repo
   add_atom_repo
   add_dark_themes
+  add_libreOffice_repo
 
   # Atualizando....
   _print_info "Update..."
@@ -294,8 +297,6 @@ main(){
 
   # Baixando algumas ferramentas e utilitários
   install_tools
-
-  remove_unused_packages
 
   # apt fix-broken
   # pra consertar possíveis dependencias e pacotes quebrados

@@ -1,9 +1,9 @@
 ubuntu install
 ===========
-[![environment](https://img.shields.io/badge/environment_min-ubuntu_16.04-orange.svg)](https://img.shields.io/badge/environment_min-ubuntu_16.04-orange.svg)
+[![environment](https://img.shields.io/badge/environment_min-ubuntu_18.04-orange.svg)](https://img.shields.io/badge/environment_min-ubuntu_18.04-orange.svg)
 
 ## Description
-Install my firsts packages and make initial configs in a Ubuntu formatted.
+Install my firsts packages and make initial configs in a Ubuntu formatted. Its recommended Ubuntu 18.04 Minimal Installation.
 
 This repository have 2 modules:
 
